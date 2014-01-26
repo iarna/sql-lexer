@@ -1,0 +1,4 @@
+identifiers no greater then 128 characters
+national chars in N'' strings
+bits only in B'' strings
+hexits only in X'' strings

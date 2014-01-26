@@ -1,0 +1,14 @@
+{
+  "name": "sql-lexer",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "unicode-6.3.0": "~0.1.2"
+  },
+  "main": "lexer.js",
+  "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/iarna/sql.git"
+  }
+}
