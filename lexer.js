@@ -67,6 +67,7 @@ var TokenMatcher = exports.TokenMatcher = function(lexer) {
     this.type = null;
     this.buffer = '';
     this.consumed = '';
+    this.matchers = [];
 }
 
 TokenMatcher.prototype.match = function (char) {
@@ -77,8 +78,8 @@ TokenMatcher.prototype.match = function (char) {
 
 TokenMatcher.prototype.detect = function (char) {
     var bufferPos = this.lexer.bufferPos;
-    for (this.type in this) {
-        if (this.type.charAt(0) != '$') continue;
+    for (var ii in this.matchers) {
+        this.type = this.matchers[ii];
         if (this.skip[this.type]) continue;
         this[this.type].call(this,char);
         // If we consumed any characters then we had a match and can move on

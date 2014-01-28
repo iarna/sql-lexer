@@ -14,6 +14,21 @@ util.inherits(SQL92,lexer.Scanner);
 
 var TokenMatcher = module.exports.TokenMatcher = function(scanner) {
     lexer.TokenMatcher.call(this,scanner);
+    this.matchers = [
+        '$space',
+        '$string',
+        '$bstring',
+        '$xstring',
+        '$nstring',
+        '$symbol',
+        '$identifier',
+        '$identifierQuoted',
+        '$comment',
+        '$approximateUnsignedNumber',
+        '$approximateSignedNumber',
+        '$exactUnsignedNumber',
+        '$exactSignedNumber'
+    ];
 };
 util.inherits(TokenMatcher,lexer.TokenMatcher);
 
