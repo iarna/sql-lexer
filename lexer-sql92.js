@@ -20,14 +20,14 @@ var TokenMatcher = module.exports.TokenMatcher = function(scanner) {
         '$bstring',
         '$xstring',
         '$nstring',
-        '$symbol',
         '$identifier',
         '$identifierQuoted',
         '$comment',
         '$approximateUnsignedNumber',
         '$approximateSignedNumber',
         '$exactUnsignedNumber',
-        '$exactSignedNumber'
+        '$exactSignedNumber',
+        '$symbol'
     ];
 };
 util.inherits(TokenMatcher,lexer.TokenMatcher);
