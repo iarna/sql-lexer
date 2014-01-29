@@ -14,7 +14,7 @@ Just begun. From SQL92 it supports:
 To do in SQL92:
 
 * Character set specifier both string literals and identifiers
-    _[schemaname.]identifier
+    \_[schemaname.]identifier
   SQL_TEXT is supposed to always be available
 * Command separators? Not really addressed by the standard =/
 * Procs are poorly defined as well
