@@ -7,13 +7,9 @@ exports.Scanner = function(Scanner) {
         Scanner.call(this,options);
     }
     util.inherits(DebugScanner,Scanner);
-    DebugScanner.prototype.rewind = function(buffer) {
-        Scanner.prototype.rewind.call(this,buffer);
-        return console.log("REWIND",buffer.length, this.bufferPos, JSON.stringify(buffer), JSON.stringify(this.buffer.substr(this.bufferPos,30)));
-    }
-    DebugScanner.prototype.consume = function() {
-        Scanner.prototype.consume.call(this);
-        return console.log("BUFFERPOS++",this.bufferPos, this.streamPos);
+    DebugScanner.prototype._transform = function(data,encoding,done) {
+        console.log("DATA", data);
+        Scanner.prototype._transform.call(data,encoding,done);
     }
     return DebugScanner;
 }
@@ -48,9 +44,9 @@ exports.TokenMatcher = function(TokenMatcher) {
         console.log("REJECT",this.type);
         return TokenMatcher.prototype.reject.call(this);
     }
-    DebugTokenMatcher.prototype.complete = function () {
-        console.log("COMPLETE",this.type);
-        return TokenMatcher.prototype.complete.call(this);
+    DebugTokenMatcher.prototype.complete = function (type,value) {
+        console.log("COMPLETE",this.type,type,value);
+        return TokenMatcher.prototype.complete.call(this,type,value);
     }
     DebugTokenMatcher.prototype.revert = function () {
         console.log("REVERT",this.type);
