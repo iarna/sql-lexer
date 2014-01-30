@@ -2,35 +2,17 @@
 var util = require('util');
 var stream = require('stream');
 
-var Scanner = exports.Scanner = function (options) {
-    if (!options) options = {};
+module.exports = function(stream,L0,L1) {
+    if (!L0) L0 = TokenMatcherL0;
+    if (!L1) L1 = TokenMatcherL1;
+    stream.setEncoding('utf8');
+    return stream.pipe(L0).pipe(L1);
+}
+
+var TokenMatcherL0 = module.exports.TokenMatcherL0 = function(options) {
+    if (!options) options = {}
     options.objectMode = true;
-    stream.Transform.call(this, options);
-    if ( ! (this.tokenMatcherL0 = options.tokenMatcherL0) ) {
-        throw new Error('SQL Lexer requires an L0 tokenMatcher in order to function');
-    }
-
-    if ( ! (this.tokenMatcherL1 = options.tokenMatcherL1) ) {
-        throw new Error('SQL Lexer requires an L1 tokenMatcher in order to function');
-    }
-    this.tokenMatcherL0.emitToken = function(token) { this.tokenMatcherL1.match(token) }.bind(this);
-    this.tokenMatcherL1.emitToken = function(token) { this.push(token) }.bind(this);
-}
-util.inherits(Scanner,stream.Transform);
-
-Scanner.prototype._transform = function(data,encoding,done) {
-    for (var ii=0; ii<data.length; ++ii) {
-        this.tokenMatcherL0.match( data.charAt(ii) );
-    }
-    this.tokenMatcherL0.eob();
-    done();
-}
-
-Scanner.prototype._flush = function () {
-    this.tokenMatcherL0.eof();
-}
-
-var TokenMatcherL0 = exports.TokenMatcherL0 = function() {
+    stream.Transform.call(this,options);
     this.active = null;
     this.type = null;
     this.buffer = '';
@@ -38,6 +20,16 @@ var TokenMatcherL0 = exports.TokenMatcherL0 = function() {
     this.streamPos = 0;
     this.streamRow = 0;
     this.streamCol = 0;
+}
+util.inherits(TokenMatcherL0,stream.Transform);
+
+TokenMatcherL0.prototype._transform = function(data,encoding,done) {
+    if (data instanceof Buffer) { throw Error("SQL lexer input stream must be in UTF8 mode") }
+    for (var ii=0; ii<data.length; ++ii) {
+        this.match( data.charAt(ii) );
+    }
+    if ((this.active) && this.active.EOB) this.active.EOB.call(this);
+    done();
 }
 
 TokenMatcherL0.prototype.match = function (char) {
@@ -64,7 +56,7 @@ TokenMatcherL0.prototype.detect = function (char) {
     this.consume(char).error();
 }
 
-TokenMatcherL0.prototype.eof = function() {
+TokenMatcherL0.prototype._flush = function() {
     if (this.active) {
         if (this.active.EOF) {
             this.active.EOF.call(this);
@@ -74,10 +66,6 @@ TokenMatcherL0.prototype.eof = function() {
             this.error('Premature EOF while in '+this.active);
         }
     }
-}
-
-TokenMatcherL0.prototype.eob = function() {
-    if ((this.active) && this.active.EOB) this.active.EOB.call(this);
 }
 
 TokenMatcherL0.prototype.consume = function(char) {
@@ -97,7 +85,7 @@ TokenMatcherL0.prototype.consume = function(char) {
 TokenMatcherL0.prototype.reject = TokenMatcherL0.prototype.complete = function(type,value) {
     if (!this.active) return;
     if (this.buffer.length || value.length) {
-        this.emitToken({
+        this.push({
             type:  type ? type : this.type,
             value: value ? value : this.buffer,
             pos:   this.pos,
@@ -115,13 +103,33 @@ TokenMatcherL0.prototype.error = function(value) {
     return this.complete('$error',value);
 }
 
-var TokenMatcherL1 = exports.TokenMatcherL1 = function() {
+var TokenMatcherL1 = module.exports.TokenMatcherL1 = function(options) {
+    if (!options) options = {}
+    options.objectMode = true;
+    stream.Transform.call(this,options);
     this.active = null;
     this.type = null;
     this.buffer = [];
     this.matchers = [];
     this.skip = {};
     this.matchBuffer = [];
+}
+util.inherits(TokenMatcherL1,stream.Transform);
+
+TokenMatcherL1.prototype._transform = function(data,encoding,done) {
+    this.match(data);
+    done();
+}
+
+TokenMatcherL1.prototype._flush = function() {
+    if (this.active) {
+        if (this.active.EOF) {
+            this.active.EOF.call(this);
+        }
+        else {
+            this.revert();
+        }
+    }
 }
 
 TokenMatcherL1.prototype.match = function (token) {
@@ -152,7 +160,7 @@ TokenMatcherL1.prototype.reject = TokenMatcherL1.prototype.complete = function(t
         }
     }
     if (value.length) {
-        this.emitToken({
+        this.push({
             type:  type,
             value: value,
             pos:   this.buffer[0].pos,

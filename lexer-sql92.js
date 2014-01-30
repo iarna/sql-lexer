@@ -5,16 +5,15 @@ var unicode = {
     L: require('unicode-6.3.0/categories/L/regex.js')
 };
 
-var SQL92 = module.exports.Scanner = function (options) {
-    if (!options) options = {};
-    if (!options.tokenMatcherL0) options.tokenMatcherL0 = new TokenMatcherL0(this);
-    if (!options.tokenMatcherL1) options.tokenMatcherL1 = new TokenMatcherL1(this);
-    lexer.Scanner.call(this, options);
+module.exports = function(stream,L0,L1) {
+    if (!L0) L0 = TokenMatcherL0;
+    if (!L1) L1 = TokenMatcherL1;
+    stream.setEncoding('utf8');
+    return stream.pipe(new L0()).pipe(new L1());
 }
-util.inherits(SQL92,lexer.Scanner);
 
-var TokenMatcherL0 = module.exports.TokenMatcherL0 = function() {
-    lexer.TokenMatcherL0.call(this);
+var TokenMatcherL0 = module.exports.TokenMatcherL0 = function(options) {
+    lexer.TokenMatcherL0.call(this,options);
     this.matchers = [
         '$space',
         '$comment',
@@ -26,6 +25,7 @@ var TokenMatcherL0 = module.exports.TokenMatcherL0 = function() {
     ];
 }
 util.inherits(TokenMatcherL0,lexer.TokenMatcherL0);
+
 TokenMatcherL0.prototype.$space = function (char) {
     if (char == " " || char == "\t" || char == "\n" || char == "\r") return this.consume(char);
     this.reject();
@@ -138,8 +138,8 @@ TokenMatcherL0.prototype.$symbol = function (char) {
     }
 }
 
-var TokenMatcherL1 = module.exports.TokenMatcherL1 = function() {
-    lexer.TokenMatcherL1.call(this);
+var TokenMatcherL1 = module.exports.TokenMatcherL1 = function(options) {
+    lexer.TokenMatcherL1.call(this,options);
     this.matchers = [
         '$space',
         '$comment',

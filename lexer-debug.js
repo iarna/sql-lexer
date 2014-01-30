@@ -1,20 +1,7 @@
 "use strict";
 var util = require('util');
 
-exports.Scanner = function(Scanner) {
-    var DebugScanner = function (options) {
-        console.log("CREATE SCANNER");
-        Scanner.call(this,options);
-    }
-    util.inherits(DebugScanner,Scanner);
-    DebugScanner.prototype._transform = function(data,encoding,done) {
-        console.log("DATA", data);
-        Scanner.prototype._transform.call(data,encoding,done);
-    }
-    return DebugScanner;
-}
-
-exports.TokenMatcher = function(TokenMatcher) {
+module.exports = function(TokenMatcher) {
     var DebugTokenMatcher = function (options) {
         console.log("CREATE TOKENMATCHER",options);
         TokenMatcher.call(this,options);
