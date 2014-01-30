@@ -158,24 +158,15 @@ var TokenMatcherL1 = module.exports.TokenMatcherL1 = function(options) {
 }
 util.inherits(TokenMatcherL1,lexer.TokenMatcherL1);
 
-var passthru$ = function (type) {
-    var matcher;
-    if (type) {
-        matcher = function (token) {
-            token.type === type ? this.consume(token).complete() : this.reject();
-        }
+var passthrough$ = function (type) {
+    return function (token) {
+        token.type === this.type ? this.consume(token).complete() : this.reject();
     }
-    else {
-        matcher = function (token) {
-            token.type === this.type ? this.consume(token).complete() : this.reject();
-        }
-    }
-    return matcher;
 }
 
-TokenMatcherL1.prototype.$space = passthru$();
-TokenMatcherL1.prototype.$comment = passthru$();
-TokenMatcherL1.prototype.$string = passthru$();
+TokenMatcherL1.prototype.$space = passthrough$();
+TokenMatcherL1.prototype.$comment = passthrough$();
+TokenMatcherL1.prototype.$string = passthrough$();
 
 var typedStringMatcher$ = function (prefix) {
    return function (token) {
@@ -193,7 +184,7 @@ TokenMatcherL1.prototype.$bstring = typedStringMatcher$('b');
 TokenMatcherL1.prototype.$nstring = typedStringMatcher$('n');
 TokenMatcherL1.prototype.$xstring = typedStringMatcher$('x');
 
-TokenMatcherL1.prototype.$identifierQuoted = passthru$();
+TokenMatcherL1.prototype.$identifierQuoted = passthrough$();
 
 var unsignedInteger$ = function (next) {
     return function (token) { token.type == '$digits' ? this.consume(token) : next ? next.call(this,token) : this.reject() };
@@ -264,5 +255,11 @@ TokenMatcherL1.prototype.$exactSignedNumber = function (token) {
     this.active = this.$exactUnsignedNumber;
 }
 
-TokenMatcherL1.prototype.$bareword = passthru$('$letters');
-TokenMatcherL1.prototype.$symbol = passthru$('$symbol');
+var passthroughType$ = function (type) {
+    return function (token) {
+        token.type === type ? this.consume(token).complete() : this.reject();
+    }
+}
+
+TokenMatcherL1.prototype.$bareword = passthroughType$('$letters');
+TokenMatcherL1.prototype.$symbol = passthroughType$('$symbol');
