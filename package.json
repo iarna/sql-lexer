@@ -5,7 +5,7 @@
   "dependencies": {
     "unicode-6.3.0": "~0.1.2"
   },
-  "main": "lexer.js",
+  "main": "index.js",
   "license": "BSD",
   "repository": {
     "type": "git",
