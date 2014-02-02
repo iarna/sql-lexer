@@ -3,6 +3,7 @@ var LexerDebugger = require('./lexer-debug.js');
 var Pipes = require('./pipe-combiner.js');
 var util = require('util');
 var SQL92 = module.exports = {
+    Colorize: require('./colorize-sql92.js'),
     Lex: require('./lexer-sql92.js'),
     Keyword: require('./sql92-keywords.js'),
     TraceLex: function (L0,L1) {
