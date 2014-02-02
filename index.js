@@ -1,4 +1,4 @@
 module.exports = {
-    SQL92: require('./lexer-sql92'),
+    SQL92: require('./sql92'),
     Lexer: require('./lexer')
 }

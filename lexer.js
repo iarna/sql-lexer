@@ -2,17 +2,11 @@
 var util = require('util');
 var stream = require('stream');
 
-module.exports = function(stream,L0,L1) {
-    if (!L0) L0 = TokenMatcherL0;
-    if (!L1) L1 = TokenMatcherL1;
-    stream.setEncoding('utf8');
-    return stream.pipe(L0).pipe(L1);
-}
-
-var TokenMatcherL0 = module.exports.TokenMatcherL0 = function(options) {
+var TokenMatcherL0 = exports.TokenMatcherL0 = function(options) {
     if (!options) options = {}
     options.objectMode = true;
     stream.Transform.call(this,options);
+    this.on('pipe',function (stream) { stream.setEncoding('utf8') });
     this.active = null;
     this.type = null;
     this.buffer = '';
@@ -103,7 +97,7 @@ TokenMatcherL0.prototype.error = function(value) {
     return this.complete('$error',value);
 }
 
-var TokenMatcherL1 = module.exports.TokenMatcherL1 = function(options) {
+var TokenMatcherL1 = exports.TokenMatcherL1 = function(options) {
     if (!options) options = {}
     options.objectMode = true;
     stream.Transform.call(this,options);

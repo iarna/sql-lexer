@@ -1,16 +1,15 @@
 "use strict";
 var lexer = require('./lexer.js');
+var Pipes = require('./pipe-combiner.js');
 var util = require('util');
 var unicode = {
     L: require('unicode-6.3.0/categories/L/regex.js')
 };
 
-module.exports = function(stream,L0,L1) {
-    if (!L0) L0 = TokenMatcherL0;
-    if (!L1) L1 = TokenMatcherL1;
-    stream.setEncoding('utf8');
-    return stream.pipe(new L0()).pipe(new L1());
+var SQL92 = module.exports = function() {
+    Pipes.call(this, [new TokenMatcherL0(),new TokenMatcherL1()]);
 }
+util.inherits(SQL92, Pipes);
 
 var TokenMatcherL0 = module.exports.TokenMatcherL0 = function(options) {
     lexer.TokenMatcherL0.call(this,options);

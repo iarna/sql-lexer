@@ -1,8 +1,9 @@
 "use strict";
-var SQL92      = require('./lexer-sql92.js'),
-    TokenDebug = require('./token-debugger.js'),
-    fs         = require('fs');
+var SQL92 = require("./sql92.js");
+var fs = require('fs');
+var StreamJSON = require('./stream-json.js');
 
-SQL92(fs.createReadStream(__dirname+'/example.sql'))
-   .pipe(new TokenDebug())
-   .pipe(process.stdout).on('error',function (e){process.exit()});
+fs.createReadStream(__dirname+'/example.sql')
+  .pipe(new SQL92.Lex())
+  .pipe(new StreamJSON())
+  .pipe(process.stdout).on('error',function (e){process.exit()});
