@@ -50,7 +50,7 @@ TokenMatcherL0.prototype.detect = function (char) {
     this.consume(char).error();
 }
 
-TokenMatcherL0.prototype._flush = function() {
+TokenMatcherL0.prototype._flush = function(done) {
     if (this.active) {
         if (this.active.EOF) {
             this.active.EOF.call(this);
@@ -60,6 +60,7 @@ TokenMatcherL0.prototype._flush = function() {
             this.error('Premature EOF while in '+this.active);
         }
     }
+    done();
 }
 
 TokenMatcherL0.prototype.consume = function(char) {
@@ -115,7 +116,7 @@ TokenMatcherL1.prototype._transform = function(data,encoding,done) {
     done();
 }
 
-TokenMatcherL1.prototype._flush = function() {
+TokenMatcherL1.prototype._flush = function(done) {
     if (this.active) {
         if (this.active.EOF) {
             this.active.EOF.call(this);
@@ -124,6 +125,7 @@ TokenMatcherL1.prototype._flush = function() {
             this.revert();
         }
     }
+    done();
 }
 
 TokenMatcherL1.prototype.match = function (token) {
@@ -222,7 +224,8 @@ CoalesceTokens.prototype._transform = function(data,encoding,done) {
     }
     done();
 }
-CoalesceTokens.prototype._flush = function() {
-    if (! this.coalesce) return;
+CoalesceTokens.prototype._flush = function(done) {
+    if (! this.coalesce) return done();
     this.push( this.coalesce );
+    done();
 }
