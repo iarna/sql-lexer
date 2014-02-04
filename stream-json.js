@@ -3,9 +3,9 @@ var util = require('util');
 var stream = require('stream');
 
 var StreamJSON = module.exports = function (options) {
-    if (!options) options = {};
-    options.objectMode = true;
     stream.Transform.call(this, options);
+    this._writableState.objectMode = true;
+    this._readableState.objectMode = false;
 }
 util.inherits(StreamJSON,stream.Transform);
 

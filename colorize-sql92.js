@@ -4,8 +4,6 @@ var Colorize = require('./colorize.js'),
     util = require('util');
 
 var ColorizeSQL92 = module.exports = function (options) {
-    if (!options) options = {};
-    options.objectMode = true;
     Colorize.call(this, options);
 }
 util.inherits(ColorizeSQL92,Colorize);

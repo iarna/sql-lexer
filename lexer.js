@@ -3,10 +3,11 @@ var util = require('util');
 var stream = require('stream');
 
 var TokenMatcherL0 = exports.TokenMatcherL0 = function(options) {
-    if (!options) options = {}
+    if (!options) options = {};
     options.objectMode = true;
     stream.Transform.call(this,options);
-    this.on('pipe',function (stream) { stream.setEncoding('utf8') });
+
+    this.on('pipe',function (stream) { stream.setEncoding('utf8'); });
     this.active = null;
     this.type = null;
     this.buffer = '';
