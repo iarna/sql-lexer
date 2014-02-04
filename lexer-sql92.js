@@ -2,16 +2,17 @@
 var lexer = require('./lexer.js');
 var Pipes = require('./pipe-combiner.js');
 var util = require('util');
+var stream = require('stream');
 var unicode = {
     L: require('unicode-6.3.0/categories/L/regex.js')
 };
 
 var SQL92 = module.exports = function() {
-    Pipes.call(this, [new TokenMatcherL0(),new TokenMatcherL1()]);
+    Pipes.call(this, [new TokenMatcherL0(),new TokenMatcherL1(), new lexer.CoalesceTokens()]);
 }
 util.inherits(SQL92, Pipes);
 
-var TokenMatcherL0 = module.exports.TokenMatcherL0 = function(options) {
+var TokenMatcherL0 = SQL92.TokenMatcherL0 = function(options) {
     lexer.TokenMatcherL0.call(this,options);
     this.matchers = [
         '$space',
@@ -137,9 +138,10 @@ TokenMatcherL0.prototype.$symbol = function (char) {
     }
 }
 
-var TokenMatcherL1 = module.exports.TokenMatcherL1 = function(options) {
+var TokenMatcherL1 = SQL92.TokenMatcherL1 = function(options) {
     lexer.TokenMatcherL1.call(this,options);
     this.matchers = [
+        '$error',
         '$space',
         '$comment',
         '$bstring',
@@ -163,6 +165,7 @@ var passthrough$ = function (type) {
     }
 }
 
+TokenMatcherL1.prototype.$error = passthrough$();
 TokenMatcherL1.prototype.$space = passthrough$();
 TokenMatcherL1.prototype.$comment = passthrough$();
 TokenMatcherL1.prototype.$string = passthrough$();
@@ -262,3 +265,48 @@ var passthroughType$ = function (type) {
 
 TokenMatcherL1.prototype.$bareword = passthroughType$('$letters');
 TokenMatcherL1.prototype.$symbol = passthroughType$('$symbol');
+
+var CombineStrings = SQL92.CombineStrings = function(options) {
+    if (!options) options = {}
+    options.objectMode = true;
+    stream.Transform.call(this,options);
+    this.string = null;
+    this.buffer = [];
+}
+util.inherits(CombineStrings,stream.Transform);
+
+CombineStrings.prototype._transform = function(data,encoding,done) {
+    if (this.string) {
+        if (data.type == '$string') {
+            this.buffer = [];
+            this.string.value += data.value;
+        }
+        else if (data.type == '$space') {
+            this.buffer.push(data);
+        }
+        else {
+            this.push(this.string);
+            for (var ii in this.buffer) {
+                this.push(this.buffer[ii]);
+            }
+            this.string = null;
+            this.buffer = [];
+        }
+    }
+    else {
+        if (data.type == '$string') {
+            this.string = data;
+        }
+        else {
+            this.push(data);
+        }
+    }
+    done();
+}
+CombineStrings.prototype._flush = function() {
+    if (! this.string) return;
+    this.push(this.string);
+    for (var ii in this.buffer) {
+        this.push(this.buffer[ii]);
+    }
+}
