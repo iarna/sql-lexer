@@ -1,5 +1,5 @@
-"use strict";
-var SQL92 = require("./sql92.js");
+'use strict';
+var SQL92 = require('./sql92.js');
 var fs = require('fs');
 
 var filename = process.argv[2];

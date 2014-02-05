@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var Colorize = require('./colorize.js'),
     keyword = require('./sql92-keywords.js'),
     util = require('util');

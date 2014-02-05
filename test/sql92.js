@@ -3,9 +3,9 @@ var sql = require('../index.js');
 var fs = require('fs');
 var StreamJSON = require('../stream-json.js');
 var byline = require('byline');
-var test = require("tape");
+var test = require('tape');
 
-test("SQL92", function (t) {
+test('SQL92', function (t) {
     fs.readdir(__dirname+'/sql92/',function(err, files){
         if (err) throw err;
         var buf = {};

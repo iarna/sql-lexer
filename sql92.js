@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var LexerDebugger = require('./lexer-debug.js');
 var Pipes = require('./pipe-combiner.js');
 var util = require('util');

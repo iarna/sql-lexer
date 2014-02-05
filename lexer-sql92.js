@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var lexer = require('./lexer.js');
 var Pipes = require('./pipe-combiner.js');
 var util = require('util');
@@ -27,7 +27,7 @@ var TokenMatcherL0 = SQL92.TokenMatcherL0 = function(options) {
 util.inherits(TokenMatcherL0,lexer.TokenMatcherL0);
 
 TokenMatcherL0.prototype.$space = function (char) {
-    if (char === " " || char === "\t" || char === "\n" || char === "\r") return this.consume(char);
+    if (char === ' ' || char === '\t' || char === '\n' || char === '\r') return this.consume(char);
     if (char === 'eof') return this.complete();
     this.reject();
 }

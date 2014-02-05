@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var util = require('util');
 var stream = require('stream');
 
@@ -10,6 +10,6 @@ var StreamJSON = module.exports = function (options) {
 util.inherits(StreamJSON,stream.Transform);
 
 StreamJSON.prototype._transform = function(data,encoding,done) {
-    this.push( JSON.stringify(data)+"\n" );
+    this.push( JSON.stringify(data)+'\n' );
     done();
 }

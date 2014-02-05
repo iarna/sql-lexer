@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var clc = require('cli-color'),
     util = require('util'),
     stream = require('stream');

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var util = require('util');
 var stream = require('stream');
 
@@ -19,7 +19,7 @@ var TokenMatcherL0 = exports.TokenMatcherL0 = function(options) {
 util.inherits(TokenMatcherL0,stream.Transform);
 
 TokenMatcherL0.prototype._transform = function(data,encoding,done) {
-    if (data instanceof Buffer) { return done(new Error("SQL lexer input stream must be in UTF8 mode")) }
+    if (data instanceof Buffer) { return done(new Error('SQL lexer input stream must be in UTF8 mode')) }
     for (var ii=0; ii<data.length; ++ii) {
         this.match( data[ii] );
     }

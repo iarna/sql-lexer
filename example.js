@@ -1,5 +1,5 @@
 'use strict';
-var SQL92 = require("./sql92.js");
+var SQL92 = require('./sql92.js');
 var fs = require('fs');
 var StreamJSON = require('./stream-json.js');
 
