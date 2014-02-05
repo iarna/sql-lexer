@@ -16,7 +16,8 @@
     "url": "git://github.com/iarna/sql-lexer.git"
   },
   "devDependencies": {
-    "tape": "~1.0.4"
+    "tape": "~1.0.4",
+    "byline": "~4.1.1"
   },
   "directories": {
     "test": "test"
