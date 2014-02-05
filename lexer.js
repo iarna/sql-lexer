@@ -57,7 +57,7 @@ TokenMatcherL0.prototype._flush = function(done) {
 }
 
 TokenMatcherL0.prototype.consume = function(char,active) {
-    if (char==='eof') return this.error('unexpected end of file');
+    if (char==='eof') throw new Error('Error in parser: Unexpected EOF while in '+this.type);
     if (char===null || typeof char == 'undefined') char = '';
     if (! this.active) {
         this.active = active? active: this[this.type];
@@ -134,7 +134,7 @@ TokenMatcherL1.prototype.consume = function(token) {
         this.active = this[this.type];
     }
     else if (token.type==='$eof') {
-        throw new Error('Unexpected EOF while in '+this.type);
+        throw new Error('Error in parser: Unexpected EOF while in '+this.type);
     }
 
     this.matchBuffer.shift();

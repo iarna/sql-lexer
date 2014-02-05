@@ -62,7 +62,7 @@ TokenMatcherL0.prototype.$letters = function (char) {
     this.reject();
 }
 
-var stringMatcher$ = function (delim) {
+var stringMatcher$ = function (delim,what) {
     return function (char) {
         if (char !== delim) return this.reject();
         var quoteEscape = function (char) {
@@ -72,7 +72,7 @@ var stringMatcher$ = function (delim) {
             this.active = stringChar;
         }
         var stringChar = function (char) {
-            if (char==='eof') return this.error('Unterminated string');
+            if (char==='eof') return this.error('unterminated '+what);
             if (char!==delim) return this.consume(char);
             if (char === delim) {
                 this.consume();
@@ -87,9 +87,9 @@ var stringMatcher$ = function (delim) {
     }
 }
 
-TokenMatcherL0.prototype.$string = stringMatcher$("'");
+TokenMatcherL0.prototype.$string = stringMatcher$("'", 'string');
 
-TokenMatcherL0.prototype.$identifierQuoted = stringMatcher$('"');
+TokenMatcherL0.prototype.$identifierQuoted = stringMatcher$('"', 'delimited identifier');
 
 TokenMatcherL0.prototype.$symbol = function (char) {
     switch (char) {
@@ -110,6 +110,8 @@ TokenMatcherL0.prototype.$symbol = function (char) {
         this.active = function (char) {
             switch (char) {
             case 'eof':
+                this.consuem().complete();
+                break;
             case '>':
             case '=':
                 this.consume(char).complete();
@@ -122,13 +124,13 @@ TokenMatcherL0.prototype.$symbol = function (char) {
     case '>':
         this.consume(char);
         this.active = function (char) {
-            (char==='=' || char==='eof') ? this.consume(char).complete() : this.reject();
+            char==='=' ? this.consume(char).complete() : char==='eof' ? this.consume().complete() : this.reject();
         }
         break;
     case '|':
         this.consume(char);
         this.active = function (char) {
-            (char==='|' || char==='eof') ? this.consume(char).complete() : this.reject();
+            char==='|' ? this.consume(char).complete() : char==='eof' ? this.consume().complete() : this.reject();
         }
         break;
     default:
