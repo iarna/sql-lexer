@@ -23,7 +23,6 @@ TokenMatcherL0.prototype._transform = function(data,encoding,done) {
     for (var ii=0; ii<data.length; ++ii) {
         this.match( data[ii] );
     }
-    if ((this.active) && this.active.EOB) this.active.EOB.call(this);
     done();
 }
 
@@ -33,7 +32,7 @@ TokenMatcherL0.prototype.match = function (char) {
        this.active ? this.active(char) : this.detect(char);
     }
     ++ this.streamPos;
-    if (char == '\n') {
+    if (char === '\n') {
         ++ this.streamRow;
         this.streamCol = 0;
     }
@@ -52,22 +51,16 @@ TokenMatcherL0.prototype.detect = function (char) {
 }
 
 TokenMatcherL0.prototype._flush = function(done) {
-    if (this.active) {
-        if (this.active.EOF) {
-            this.active.EOF.call(this);
-        }
-        else {
-            console.log(this.active);
-            this.error('Premature EOF while in '+this.active);
-        }
-    }
+    if (this.active) this.active('eof');
+    this.push({type: '$eof', value: '', pos: this.streamPos, row: this.streamRow, col: this.streamCol });
     done();
 }
 
-TokenMatcherL0.prototype.consume = function(char) {
-    if (char==null) char = '';
+TokenMatcherL0.prototype.consume = function(char,active) {
+    if (char==='eof') return this.error('unexpected end of file');
+    if (char===null || typeof char == 'undefined') char = '';
     if (! this.active) {
-        this.active = this[this.type];
+        this.active = active? active: this[this.type];
         this.pos = this.streamPos;
         this.row = this.streamRow;
         this.col = this.streamCol;
@@ -79,7 +72,7 @@ TokenMatcherL0.prototype.consume = function(char) {
 }
 
 TokenMatcherL0.prototype.reject = TokenMatcherL0.prototype.complete = function(type,value) {
-    if (!this.active) return;
+    if (!this.active) return this;
     if (this.buffer.length || value.length) {
         this.push({
             type:  type ? type : this.type,
@@ -96,6 +89,7 @@ TokenMatcherL0.prototype.reject = TokenMatcherL0.prototype.complete = function(t
 }
 
 TokenMatcherL0.prototype.error = function(value) {
+    this.hungry = false;
     return this.complete('$error',value);
 }
 
@@ -117,24 +111,13 @@ TokenMatcherL1.prototype._transform = function(data,encoding,done) {
     done();
 }
 
-TokenMatcherL1.prototype._flush = function(done) {
-    if (this.active) {
-        if (this.active.EOF) {
-            this.active.EOF.call(this);
-        }
-        else {
-            this.revert();
-        }
-    }
-    done();
-}
-
 TokenMatcherL1.prototype.match = function (token) {
-    this.matchBuffer = [token];
+    if (token) this.matchBuffer.push(token);
     while (this.matchBuffer.length) {
        this.active ? this.active(this.matchBuffer[0]) : this.detect(this.matchBuffer[0]);
     }
 }
+
 TokenMatcherL1.prototype.consume = function(token) {
     if (! this.active) {
         this.active = this[this.type];
@@ -157,13 +140,13 @@ TokenMatcherL1.prototype.reject = TokenMatcherL1.prototype.complete = function(t
         }
     }
     if (value.length) {
-        this.push({
-            type:  type,
-            value: value,
-            pos:   this.buffer[0].pos,
-            row:   this.buffer[0].row,
-            col:   this.buffer[0].col
-            });
+        var token = {};
+        for (var key in this.buffer[0]) {
+            token[key] = this.buffer[0][key];
+        }
+        token.type = type;
+        token.value = value;
+        this.push(token);
         this.skip = {};
     }
     this.active = null;
@@ -182,7 +165,7 @@ TokenMatcherL1.prototype.detect = function (token) {
         this.type = this.matchers[ii];
         if (this.skip[this.type]) continue;
         this[this.type].call(this,token);
-        if (bufferSize != this.matchBuffer.length) return;
+        if (bufferSize !== this.matchBuffer.length) return;
     }
     this.consume(token).error(this.buffer);
 }
@@ -194,6 +177,7 @@ TokenMatcherL1.prototype.revert = function() {
     this.buffer = [];
     this.active = null;
     this.type = null;
+    return this;
 }
 
 var CoalesceTokens = exports.CoalesceTokens = function(options) {
@@ -204,11 +188,11 @@ var CoalesceTokens = exports.CoalesceTokens = function(options) {
 util.inherits(CoalesceTokens,stream.Transform);
 
 CoalesceTokens.prototype.canCoalesce = function(type) {
-    return type == '$error' || type == '$space';
+    return type === '$error' || type === '$space';
 }
 
 CoalesceTokens.prototype._transform = function(data,encoding,done) {
-    if (this.coalesce && this.coalesce.type != data.type) {
+    if (this.coalesce && this.coalesce.type !== data.type) {
         this.push(this.coalesce);
         this.coalesce = null;
     }

@@ -27,57 +27,54 @@ var TokenMatcherL0 = SQL92.TokenMatcherL0 = function(options) {
 util.inherits(TokenMatcherL0,lexer.TokenMatcherL0);
 
 TokenMatcherL0.prototype.$space = function (char) {
-    if (char == " " || char == "\t" || char == "\n" || char == "\r") return this.consume(char);
+    if (char === " " || char === "\t" || char === "\n" || char === "\r") return this.consume(char);
+    if (char === 'eof') return this.complete();
     this.reject();
 }
-TokenMatcherL0.prototype.$space.EOB = function () { this.complete() };
-TokenMatcherL0.prototype.$space.EOF = function () { this.complete() };
 
 TokenMatcherL0.prototype.$comment = function (char) {
-    if (char != '-') return this.reject();
+    if (char !== '-') return this.reject();
     this.consume();
     this.active = function (char) {
-        if (char != '-') {
+        if (char !== '-') {
             return this.complete('$symbol','-');
         }
         this.consume();
         this.active = function (char) {
+            if (char === 'eof') return this.complete();
             this.consume(char);
-            if (char == '\n') {
+            if (char === '\n') {
                 this.complete();
             }
         }
-        this.active.EOF = function () { this.complete() }
-    }
+    };
 }
 
 TokenMatcherL0.prototype.$digits = function (char) {
+    if (char === 'eof') return this.complete();
     if (char.match(/\d/)) return this.consume(char);
     this.reject();
 }
-TokenMatcherL0.prototype.$digits.EOF = function () { this.complete() };
 
 TokenMatcherL0.prototype.$letters = function (char) {
+    if (char === 'eof') return this.complete();
     if (char.match(unicode.L)) return this.consume(char);
     this.reject();
 }
-TokenMatcherL0.prototype.$letters.EOF = function () { this.complete() };
 
 var stringMatcher$ = function (delim) {
     return function (char) {
-        if (char != delim) return this.reject();
+        if (char !== delim) return this.reject();
         var quoteEscape = function (char) {
-            if (char == delim) {
-                this.consume(char);
-                this.active = stringChar;
-            }
-            else {
-                this.complete();
-            }
+            if (char !== delim) return this.complete();
+
+            this.consume(char);
+            this.active = stringChar;
         }
-        quoteEscape.EOF = function () { this.complete() };
         var stringChar = function (char) {
-            if (char == delim) {
+            if (char==='eof') return this.error('Unterminated string');
+            if (char!==delim) return this.consume(char);
+            if (char === delim) {
                 this.consume();
                 this.active = quoteEscape;
             }
@@ -85,8 +82,8 @@ var stringMatcher$ = function (delim) {
                 this.consume(char);
             }
         }
+        this.consume()
         this.active = stringChar;
-        this.consume();
     }
 }
 
@@ -112,6 +109,7 @@ TokenMatcherL0.prototype.$symbol = function (char) {
         this.consume(char);
         this.active = function (char) {
             switch (char) {
+            case 'eof':
             case '>':
             case '=':
                 this.consume(char).complete();
@@ -124,13 +122,13 @@ TokenMatcherL0.prototype.$symbol = function (char) {
     case '>':
         this.consume(char);
         this.active = function (char) {
-            char == '=' ? this.consume(char).complete() : this.reject();
+            (char==='=' || char==='eof') ? this.consume(char).complete() : this.reject();
         }
         break;
     case '|':
         this.consume(char);
         this.active = function (char) {
-            char == '|' ? this.consume(char).complete() : this.reject();
+            (char==='|' || char==='eof') ? this.consume(char).complete() : this.reject();
         }
         break;
     default:
@@ -154,28 +152,27 @@ var TokenMatcherL1 = SQL92.TokenMatcherL1 = function(options) {
         '$exactUnsignedNumber',
         '$exactSignedNumber',
         '$bareword',
-        '$symbol'
+        '$symbol',
+        '$eof'
     ];
 }
 util.inherits(TokenMatcherL1,lexer.TokenMatcherL1);
 
-var passthrough$ = function (type) {
-    return function (token) {
-        token.type === this.type ? this.consume(token).complete() : this.reject();
-    }
+var $passthrough = function (token) {
+    token.type === this.type ? this.consume(token).complete() : this.reject();
 }
 
-TokenMatcherL1.prototype.$error = passthrough$();
-TokenMatcherL1.prototype.$space = passthrough$();
-TokenMatcherL1.prototype.$comment = passthrough$();
-TokenMatcherL1.prototype.$string = passthrough$();
+TokenMatcherL1.prototype.$error = $passthrough;
+TokenMatcherL1.prototype.$space = $passthrough;
+TokenMatcherL1.prototype.$comment = $passthrough;
+TokenMatcherL1.prototype.$string = $passthrough;
 
 var typedStringMatcher$ = function (prefix) {
    return function (token) {
-       if ( token.type != '$letters' || token.value.toLowerCase() != prefix ) return this.reject();
+       if ( token.type !== '$letters' || token.value.toLowerCase() !== prefix ) return this.reject();
        this.consume(token);
        this.active = function (token) {
-           if (token.type != '$string') return this.revert();
+           if (token.type !== '$string') return this.revert();
            this.consume(token).complete();
        };
        this.active.value = function () { return this.buffer[1].value }
@@ -186,16 +183,18 @@ TokenMatcherL1.prototype.$bstring = typedStringMatcher$('b');
 TokenMatcherL1.prototype.$nstring = typedStringMatcher$('n');
 TokenMatcherL1.prototype.$xstring = typedStringMatcher$('x');
 
-TokenMatcherL1.prototype.$identifierQuoted = passthrough$();
+TokenMatcherL1.prototype.$identifierQuoted = $passthrough;
+
+TokenMatcherL1.prototype.$eof = $passthrough;
 
 var unsignedInteger$ = function (next) {
-    return function (token) { token.type == '$digits' ? this.consume(token) : next ? next.call(this,token) : this.reject() };
+    return function (token) { token.type === '$digits' ? this.consume(token) : next ? next.call(this,token) : this.reject() };
 }
 
 var integerOnly$ = function (next) {
     var integer = unsignedInteger$(next);
     return function (token) {
-        if (token.type != '$digits') { return this.revert() }
+        if (token.type !== '$digits') { return this.revert() }
         this.consume(token);
         this.active = integer;
     }
@@ -205,21 +204,21 @@ var exactUnsignedNumericLiteral$ = function (next) {
     var unsignedInteger = unsignedInteger$(next);
     var integerOnly = integerOnly$(next);
     var integerDotInteger = unsignedInteger$(function (token){
-        if (token.type!='$symbol' || token.value!='.') { return next ? next.call(this,token) : this.reject() }
+        if (token.type!=='$symbol' || token.value!=='.') { return next ? next.call(this,token) : this.reject() }
         this.consume(token);
         this.active = unsignedInteger;
     });
     return function (token) {
-        if (token.type == '$digits') {
+        if (token.type === '$digits') {
             this.consume(token);
             this.active = integerDotInteger;
         }
-        else if (token.type == '$symbol' && token.value=='.') {
+        else if (token.type === '$symbol' && token.value==='.') {
             this.consume(token);
             this.active = integerOnly;
         }
         else {
-            next ? next.call(this,token) : this.revert();
+            this.reject();
         }
     }
 }
@@ -227,7 +226,7 @@ var exactUnsignedNumericLiteral$ = function (next) {
 var approximateUnsignedNumericLiteral$ = function (next) {
     var integerOnly = integerOnly$(next);
     var exponent = function (token) {
-        if (token.type == '$symbol' && token.value.match(/^[-+]$/)) {
+        if (token.type === '$symbol' && token.value.match(/^[-+]$/)) {
             this.consume(token);
             this.active = integerOnly;
         }
@@ -237,7 +236,7 @@ var approximateUnsignedNumericLiteral$ = function (next) {
         }
     }
     return exactUnsignedNumericLiteral$(function (token) {
-        if (token.type != '$letters' || token.value.toLowerCase()!='e') { return this.revert() }
+        if (token.type !== '$letters' || token.value.toLowerCase()!=='e') { return this.revert() }
         this.consume(token);
         this.active = exponent;
     })
@@ -245,14 +244,14 @@ var approximateUnsignedNumericLiteral$ = function (next) {
 
 TokenMatcherL1.prototype.$approximateUnsignedNumber = approximateUnsignedNumericLiteral$();
 TokenMatcherL1.prototype.$approximateSignedNumber = function (token) {
-    if (token.type!='$symbol' || (token.value!='-' && token.value!= '+')) { return this.revert() }
+    if (token.type!=='$symbol' || (token.value!=='-' && token.value!== '+')) { return this.revert() }
     this.consume(token);
     this.active = this.$approximateUnsignedNumber;
 }
 
 TokenMatcherL1.prototype.$exactUnsignedNumber = exactUnsignedNumericLiteral$();
 TokenMatcherL1.prototype.$exactSignedNumber = function (token) {
-    if (token.type!='$symbol' || (token.value!='-' && token.value!= '+')) { return this.revert() }
+    if (token.type!=='$symbol' || (token.value!=='-' && token.value!== '+')) { return this.revert() }
     this.consume(token);
     this.active = this.$exactUnsignedNumber;
 }
@@ -277,11 +276,11 @@ util.inherits(CombineStrings,stream.Transform);
 
 CombineStrings.prototype._transform = function(data,encoding,done) {
     if (this.string) {
-        if (data.type == '$string') {
+        if (data.type === '$string') {
             this.buffer = [];
             this.string.value += data.value;
         }
-        else if (data.type == '$space') {
+        else if (data.type === '$space') {
             this.buffer.push(data);
         }
         else {
@@ -294,7 +293,7 @@ CombineStrings.prototype._transform = function(data,encoding,done) {
         }
     }
     else {
-        if (data.type == '$string') {
+        if (data.type === '$string') {
             this.string = data;
         }
         else {
