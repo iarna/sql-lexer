@@ -17,6 +17,7 @@ test('SQL92', function (t) {
             var ext = match[2];
             var tokens = [];
             var complete = function (test,index) {
+               if (!buf[test]) buf[test] = [];
                buf[test][index] = tokens;
                if (buf[test].length == 2) {
                    t.deepEqual(buf[test][0],buf[test][1],test);
@@ -27,14 +28,12 @@ test('SQL92', function (t) {
             switch (ext) {
             case 'sql':
                 ++ testCount;
-                buf[base] = [];
                 fs.createReadStream(__dirname+'/sql92/'+file)
                   .pipe(new sql.SQL92.Lex())
                   .on('data',function(token){ tokens.push(token) })
                   .on('end',function(){ complete(base,0) });
                 break;
             case 'tokens':
-                buf[base] = [];
                 var fh = fs.createReadStream(__dirname+'/sql92/'+file);
                 fh.setEncoding('utf8');
                 fh.pipe(byline.createStream())
