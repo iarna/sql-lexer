@@ -110,7 +110,7 @@ TokenMatcherL0.prototype.$symbol = function (char) {
         this.active = function (char) {
             switch (char) {
             case 'eof':
-                this.consuem().complete();
+                this.consume().complete();
                 break;
             case '>':
             case '=':
