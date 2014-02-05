@@ -118,10 +118,25 @@ TokenMatcherL1.prototype.match = function (token) {
     }
 }
 
+TokenMatcherL1.prototype.detect = function (token) {
+    var bufferSize = this.matchBuffer.length;
+    for (var ii in this.matchers) {
+        this.type = this.matchers[ii];
+        if (this.skip[this.type]) continue;
+        this[this.type].call(this,token);
+        if (bufferSize !== this.matchBuffer.length) return;
+    }
+    this.consume(token).error(this.buffer);
+}
+
 TokenMatcherL1.prototype.consume = function(token) {
     if (! this.active) {
         this.active = this[this.type];
     }
+    else if (token.type==='$eof') {
+        throw new Error('Unexpected EOF while in '+this.type);
+    }
+
     this.matchBuffer.shift();
     if (token) this.buffer.push(token);
     return this;
@@ -157,17 +172,6 @@ TokenMatcherL1.prototype.reject = TokenMatcherL1.prototype.complete = function(t
 
 TokenMatcherL1.prototype.error = function(value) {
     return this.complete('$error',value);
-}
-
-TokenMatcherL1.prototype.detect = function (token) {
-    var bufferSize = this.matchBuffer.length;
-    for (var ii in this.matchers) {
-        this.type = this.matchers[ii];
-        if (this.skip[this.type]) continue;
-        this[this.type].call(this,token);
-        if (bufferSize !== this.matchBuffer.length) return;
-    }
-    this.consume(token).error(this.buffer);
 }
 
 TokenMatcherL1.prototype.revert = function() {
