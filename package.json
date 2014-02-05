@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "unicode-6.3.0": "~0.1.2"
+    "unicode-6.3.0": "~0.1.2",
+    "cli-color": "0.2.3",
   },
   "main": "index.js",
   "license": "BSD",
