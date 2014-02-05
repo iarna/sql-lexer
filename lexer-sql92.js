@@ -256,14 +256,21 @@ TokenMatcherL1.prototype.$exactSignedNumber = function (token) {
     this.active = this.$exactUnsignedNumber;
 }
 
-var passthroughType$ = function (type) {
-    return function (token) {
-        token.type === type ? this.consume(token).complete() : this.reject();
+TokenMatcherL1.prototype.$bareword = function (token) {
+    if (token.type!=='$letters') return this.reject();
+    this.consume(token);
+    this.active = function (token) {
+        switch (token.type) {
+        case '$letters':
+        case '$digits':
+            this.consume(token);
+        default:
+            this.complete();
+        }
     }
 }
 
-TokenMatcherL1.prototype.$bareword = passthroughType$('$letters');
-TokenMatcherL1.prototype.$symbol = passthroughType$('$symbol');
+TokenMatcherL1.prototype.$symbol = $passthrough;
 
 var CombineStrings = SQL92.CombineStrings = function(options) {
     if (!options) options = {}
