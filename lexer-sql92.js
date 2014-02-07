@@ -58,7 +58,7 @@ TokenMatcherL0.prototype.$digits = function (char) {
 
 TokenMatcherL0.prototype.$letters = function (char) {
     if (char === 'eof') return this.complete();
-    if (char.match(unicode.L)) return this.consume(char);
+    if (char.match(unicode.L) || char==='_') return this.consume(char);
     this.reject();
 }
 
