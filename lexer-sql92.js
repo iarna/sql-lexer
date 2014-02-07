@@ -62,7 +62,7 @@ TokenMatcherL0.prototype.$letters = function (char) {
     this.reject();
 }
 
-var stringMatcher$ = function (delim,what) {
+var stringMatcher$ = SQL92.stringMatcher$ = function (delim,what) {
     return function (char) {
         if (char !== delim) return this.reject();
         var quoteEscape = function (char) {
@@ -160,7 +160,7 @@ var TokenMatcherL1 = SQL92.TokenMatcherL1 = function(options) {
 }
 util.inherits(TokenMatcherL1,lexer.TokenMatcherL1);
 
-var $passthrough = function (token) {
+var $passthrough = SQL92.$passthrough = function (token) {
     token.type === this.type ? this.consume(token).complete() : this.reject();
 }
 
