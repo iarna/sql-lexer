@@ -73,7 +73,7 @@ TokenMatcherL0.prototype.consume = function(char,active) {
 
 TokenMatcherL0.prototype.reject = TokenMatcherL0.prototype.complete = function(type,value) {
     if (!this.active) return this;
-    if (this.buffer.length || value.length) {
+    if (this.buffer.length || (value && value.length)) {
         this.push({
             type:  type ? type : this.type,
             value: value ? value : this.buffer,
