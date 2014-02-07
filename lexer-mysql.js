@@ -147,7 +147,7 @@ TokenMatcherL0.prototype.$commentCstyle = function (char) {
     if (char!=='/') return this.reject();
     this.consume();
     this.active = function (char) {
-        if (char!=='*') return this.revert();
+        if (char!=='*') return this.reject();
         this.consume();
         var maybeSlash = function (char) {
             if (char==='eof') return this.error('unterminated c-style comment');
