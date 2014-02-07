@@ -1,5 +1,6 @@
 'use strict';
 var LexerDebugger = require('./lexer-debug.js');
+var lexer = require('./lexer.js');
 var Pipes = require('./pipe-combiner.js');
 var util = require('util');
 var SQL92 = module.exports = {
@@ -11,7 +12,7 @@ var SQL92 = module.exports = {
         if (!L1) L1 = SQL92.Lex.TokenMatcherL1;
         L0 = LexerDebugger(L0);
         L1 = LexerDebugger(L1);
-        Pipes.call(this,[new L0(),new L1()]);
+        Pipes.call(this,[new L0(),new L1(),new lexer.CoalesceTokens()]);
     }
 };
 util.inherits(module.exports.TraceLex, Pipes);
