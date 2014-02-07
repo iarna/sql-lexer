@@ -133,12 +133,10 @@ var $doubleQuotedString = MySQL.stringMatcher$('"', 'string');
 
 TokenMatcherL0.prototype.$string = function (char) {
     if (char==="'") {
-        this.active = $singleQuotedString;
-        return this.active(char);
+        return $singleQuotedString.call(this,char);
     }
     if (char==='"') {
-        this.active = $doubleQuotedString;
-        return this.active(char);
+        return $doubleQuotedString.call(this,char);
     }
     this.reject();
 }
