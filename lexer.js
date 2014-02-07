@@ -47,7 +47,7 @@ TokenMatcherL0.prototype.detect = function (char) {
         this[this.type].call(this,char);
         if (! this.hungry) return;
     }
-    this.consume(char).error();
+    char === 'eof' ? this.consume() : this.consume(char).error();
 }
 
 TokenMatcherL0.prototype._flush = function(done) {
