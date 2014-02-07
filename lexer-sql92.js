@@ -261,7 +261,7 @@ TokenMatcherL1.prototype.$exactSignedNumber = function (token) {
 }
 
 TokenMatcherL1.prototype.$bareword = function (token) {
-    if (token.type!=='$letters') return this.reject();
+    if (token.type!=='$letters') return this.revert();
     this.consume(token);
     this.active = function (token) {
         switch (token.type) {
