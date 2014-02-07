@@ -103,6 +103,8 @@ TokenMatcherL0.prototype.$symbol = function (char) {
     case ';':
     case '=':
     case '.':
+    case '(':
+    case ')':
         this.consume(char).complete();
         break;
     case '<':
