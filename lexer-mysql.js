@@ -121,7 +121,7 @@ var stringMatcher$ = MySQL.stringMatcher$ = function (delim,what) {
                 this.consume(char);
             }
         }
-        this.consume()
+        this.consume();
         this.active = stringChar;
     }
 }
