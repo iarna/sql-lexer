@@ -102,7 +102,6 @@ module.exports = function (dialect) {
             }
             var stringChar = function (char) {
                 if (char==='eof') return this.error('unterminated '+what);
-                if (char!==delim) return this.consume(char);
                 if (char === delim) {
                     this.consume();
                     this.active = quoteEscape;
