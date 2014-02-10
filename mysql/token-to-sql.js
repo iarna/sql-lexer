@@ -38,6 +38,9 @@ module.exports = function (dialect) {
         else if (token.type === '$setdelimiter') {
             return 'DELIMITER ' + token.value;
         }
+        else if (token.type == '$identifierQuoted') {
+            return '`' + token.value.replace('`','``') + '`';
+        }
         else {
             return tokenToSQL(token);
         }
