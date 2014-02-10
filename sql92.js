@@ -1,18 +1,12 @@
 'use strict';
-var LexerDebugger = require('./lexer-debug.js');
-var lexer = require('./lexer.js');
-var Pipes = require('./pipe-combiner.js');
-var util = require('util');
-var SQL92 = module.exports = {
-    Colorize: require('./colorize-sql92.js'),
-    Lex: require('./lexer-sql92.js'),
-    Keyword: require('./sql92-keywords.js'),
-    TraceLex: function (L0,L1) {
-        if (!L0) L0 = SQL92.Lex.TokenMatcherL0;
-        if (!L1) L1 = SQL92.Lex.TokenMatcherL1;
-        L0 = LexerDebugger(L0);
-        L1 = LexerDebugger(L1);
-        Pipes.call(this,[new L0(),new L1(),new lexer.CoalesceTokens()]);
-    }
-};
-util.inherits(module.exports.TraceLex, Pipes);
+var SQL92 = module.exports = {}
+
+SQL92.TokenMatcherL0 = require('./sql92/token-matcher-L0.js')(SQL92);
+SQL92.TokenMatcherL1 = require('./sql92/token-matcher-L1.js')(SQL92);
+SQL92.Lex            = require('./sql92/lexer.js')(SQL92);
+SQL92.keyword        = require('./sql92/keywords.js')(SQL92);
+SQL92.toSQL          = require('./sql92/token-to-sql.js')(SQL92);
+SQL92.Colorize       = require('./sql92/colorize.js')(SQL92);
+SQL92.CoalesceTokens = require('./sql92/coalesce-tokens.js')(SQL92);
+SQL92.CombineStrings = require('./sql92/combine-strings.js')(SQL92);
+SQL92.TraceLex       = require('./sql92/trace-lexer.js')(SQL92);

@@ -10,6 +10,11 @@ var futureProof = {};
     .split(' ')
     .forEach(function(kw) { futureProof[kw] = true });
 
-exports.isKeyword = function (kw) { return keywords[kw] }
-exports.isForFuture = function (kw) { return futureProof[kw] }
-exports.isReserved = function (kw) { return keywords[kw] || futureProof[kw] }
+var sqlkeys = {};
+sqlkeys.isKeyword = function (kw) { return keywords[kw] }
+sqlkeys.isForFuture = function (kw) { return futureProof[kw] }
+sqlkeys.isReserved = function (kw) { return keywords[kw] || futureProof[kw] }
+
+module.exports = function (dialect) {
+    return sqlkeys;
+}

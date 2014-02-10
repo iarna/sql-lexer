@@ -1,7 +1,7 @@
 'use strict';
 var sql = require('../index.js');
 var fs = require('fs');
-var StreamJSON = require('../stream-json.js');
+var StreamJSON = require('../util/stream-json.js');
 var byline = require('byline');
 var test = require('tape');
 

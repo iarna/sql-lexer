@@ -1,2 +1,2 @@
-{"type":"$exactSignedNumber","value":"+17.3","pos":0,"row":0,"col":0}
-{"type":"$space","value":"\n","pos":5,"row":0,"col":5}
+{"type":"$exactSignedNumber","value":"+17.3","pos":0,"row":0,"col":0,"attr":{}}
+{"type":"$space","value":"\n","pos":5,"row":0,"col":5,"attr":{}}

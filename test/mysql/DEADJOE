@@ -1,0 +1,42 @@
+
+*** These modified files were found in JOE when it aborted on Tue Feb  4 19:16:48 2014
+*** JOE was aborted by UNIX signal 15
+
+*** File '(Unnamed)'
+complete
+fh
+base
+[base]
+[base][ext]
+test
+index
+revert
+$passthrough
+$passthrough;
+
+*** File '(Unnamed)'
+type
+passthrough$
+passthrough
+$passthrough();
+$error
+$eof
+$eof
+_flush
+.push
+$eof
+approximateUnsignedNumber.sql
+approximateUnsignedNumber
+
+*** File '(Unnamed)'
+space-many.tokens
+space-single.tokens
+string-basic.tokens
+string-broken.tokens
+string-b.tokens
+string-n.tokens
+string-x.tokens
+symbols-terminal-partial.tokens
+symbols.tokens
+../../lexer-sql92.js
+../../lexer-sql92.js

@@ -1,4 +1,3 @@
-'use strict';
 var util = require('util');
 var stream = require('stream');
 
@@ -52,7 +51,7 @@ TokenMatcherL0.prototype.detect = function (char) {
 
 TokenMatcherL0.prototype._flush = function(done) {
     if (this.active) this.active('eof');
-    this.push({type: '$eof', value: '', pos: this.streamPos, row: this.streamRow, col: this.streamCol });
+    this.push(new this.Token('$eof',  '', this.streamPos, this.streamRow, this.streamCol));
     done();
 }
 
@@ -74,13 +73,12 @@ TokenMatcherL0.prototype.consume = function(char,active) {
 TokenMatcherL0.prototype.reject = TokenMatcherL0.prototype.complete = function(type,value) {
     if (!this.active) return this;
     if (this.buffer.length || (value && value.length)) {
-        this.push({
-            type:  type ? type : this.type,
-            value: value ? value : this.buffer,
-            pos:   this.pos,
-            row:   this.row,
-            col:   this.col
-            });
+        this.push(new this.Token(
+            type ? type : this.type,
+            value ? value : this.buffer,
+            this.pos,
+            this.row,
+            this.col ));
     }
     this.active = null;
     this.type = null;
@@ -112,33 +110,31 @@ TokenMatcherL1.prototype._transform = function(data,encoding,done) {
 }
 
 TokenMatcherL1.prototype.match = function (token) {
-    if (token) this.matchBuffer.push(token);
-    while (this.matchBuffer.length) {
-       this.active ? this.active(this.matchBuffer[0]) : this.detect(this.matchBuffer[0]);
+    this.matchBuffer = [token];
+    while (this.token = this.matchBuffer[0]) {
+       this.active ? this.active() : this.detect();
     }
 }
 
-TokenMatcherL1.prototype.detect = function (token) {
-    var bufferSize = this.matchBuffer.length;
+TokenMatcherL1.prototype.detect = function () {
     for (var ii in this.matchers) {
         this.type = this.matchers[ii];
         if (this.skip[this.type]) continue;
-        this[this.type].call(this,token);
-        if (bufferSize !== this.matchBuffer.length) return;
+        this[this.type].call(this);
+        if (! this.token) return;
     }
-    this.consume(token).error(this.buffer);
+    this.consume().error(this.buffer);
 }
 
-TokenMatcherL1.prototype.consume = function(token) {
+TokenMatcherL1.prototype.consume = function() {
     if (! this.active) {
         this.active = this[this.type];
     }
-    else if (token.type==='$eof') {
+    else if (this.token.type==='$eof') {
         throw new Error('Error in parser: Unexpected EOF while in '+this.type);
     }
-
-    this.matchBuffer.shift();
-    if (token) this.buffer.push(token);
+    this.buffer.push(this.matchBuffer.shift());
+    this.token = null;
     return this;
 }
 
@@ -184,37 +180,3 @@ TokenMatcherL1.prototype.revert = function() {
     return this;
 }
 
-var CoalesceTokens = exports.CoalesceTokens = function(options) {
-    if (!options) options = {}
-    options.objectMode = true;
-    stream.Transform.call(this,options);
-}
-util.inherits(CoalesceTokens,stream.Transform);
-
-CoalesceTokens.prototype.canCoalesce = function(type) {
-    return type === '$error' || type === '$space';
-}
-
-CoalesceTokens.prototype._transform = function(data,encoding,done) {
-    if (this.coalesce && this.coalesce.type !== data.type) {
-        this.push(this.coalesce);
-        this.coalesce = null;
-    }
-    if (this.canCoalesce(data.type)) {
-        if (this.coalesce) {
-            this.coalesce.value += data.value;
-        }
-        else {
-            this.coalesce = data;
-        }
-    }
-    else {
-        this.push(data);
-    }
-    done();
-}
-CoalesceTokens.prototype._flush = function(done) {
-    if (! this.coalesce) return done();
-    this.push( this.coalesce );
-    done();
-}
