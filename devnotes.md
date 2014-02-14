@@ -1,31 +1,37 @@
 Current State
--------------
+=============
 
-SQL92 is mostly complete, just missing:
+SQL92 support is, AFAIK, complete. Anything missing is a bug.
 
-* Character set specifier both string literals and identifiers
-    \_[schemaname.]identifier
-  SQL_TEXT is supposed to always be available
+MySQL support should be complete except for those (and COLLATE <collation>
+suffixes).  This includes full support for alterable delimiters.  Also
+should document outside of code the one way it differs from MySQL in
+handling DELIMITER.  We may be able to through errors if people try to use
+it in unusual ways.
 
-Similarly, MySQL support should be complete except for those (and COLLATE
-<collation> suffixes).  This includes full support for alterable delimiters. 
-Also should document outside of code the one way it differs from MySQL in
-handling DELIMITER.
-
-MySQL EOL comments don't currently match MySQL semantics.  MySQL only matches them if they're followed by whitespace.
+MySQL EOL comments don't currently match MySQL semantics.  MySQL only
+matches them if the '--' is followed by whitespace.
 
 MySQL is missing full tests as yet. Some need to be added to assert for the
 various MySQL specific features.
 
-Also, the colorizer really should be split into two pieces, one that
-annotates colors, one that converts tokens into their SQL representations.
+Next up
+-------
 
-The latter will need to be extended for MySQL to make use of its various
-string escapes.  Also to support outputting c-style comments.
+A transform that emits arrays of tokens making up commands, buffering up
+till a delimiter or EOF.
 
-Emitter will be:
-Transform that coalesces commands together
-Sink that runs queryies on node-mysql2
+A transform that takes chunks as above and pushes them out as SQL.
+
+A writable that takes strings and executes them via node-mysql2 (tied to the
+mysql dialect for now).
+
+A commandline tool that uses these to execute SQL from a file a'la `modyllic
+apply`.
+
+
+Other Notes
+-----------
 
 Lexical level limits to check, in SQL92:
 
