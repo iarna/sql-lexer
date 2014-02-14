@@ -33,7 +33,7 @@ module.exports = function (dialect) {
             this.active = function (char) {
                 char==='&' ? this.consume(char).complete() : char==='eof' ? this.consume().complete() : this.reject();
             }
-            break;	
+            break;
         case '!':
             this.consume(char);
             this.active = function (char) {
@@ -75,9 +75,9 @@ module.exports = function (dialect) {
 
     var stringMatcher$ = TokenMatcherL0.stringMatcher$ = function (delim,what) {
         return function (char) {
-            if (char !== delim) return this.reject();
+            if (char!==delim) return this.reject();
             var quoteEscape = function (char) {
-                if (char !== delim) return this.complete();
+                if (char!==delim) return this.complete();
 
                 this.consume(char);
                 this.active = stringChar;
@@ -102,11 +102,11 @@ module.exports = function (dialect) {
             }
             var stringChar = function (char) {
                 if (char==='eof') return this.error('unterminated '+what);
-                if (char === delim) {
+                if (char===delim) {
                     this.consume();
                     this.active = quoteEscape;
                 }
-                else if (char === '\\') {
+                else if (char==='\\') {
                     this.consume();
                     this.active = slashEscape;
                 }
@@ -120,9 +120,9 @@ module.exports = function (dialect) {
     }
 
 
-    var $singleQuotedString = TokenMatcherL0.stringMatcher$("'", 'string');
+    var $singleQuotedString = stringMatcher$("'", 'string');
 
-    var $doubleQuotedString = TokenMatcherL0.stringMatcher$('"', 'string');
+    var $doubleQuotedString = stringMatcher$('"', 'string');
 
     TokenMatcherL0.prototype.$string = function (char) {
         if (char==="'") {
@@ -169,10 +169,10 @@ module.exports = function (dialect) {
     }
 
     TokenMatcherL0.prototype.$binLiteral = function (char) {
-        if (char !== '0') return this.reject();
+        if (char!=='0') return this.reject();
         this.consume();
         this.active = function (char) {
-            if (char === 'x') {
+            if (char==='x') {
                 this.type = '$hexLiteral';
                 this.consume();
                 this.active = function (char) {
@@ -188,7 +188,7 @@ module.exports = function (dialect) {
                     this.reject();
                 }
             }
-            else if (char === 'b') {
+            else if (char==='b') {
                 this.type = '$bitLiteral';
                 this.consume();
                 this.active = function (char) {

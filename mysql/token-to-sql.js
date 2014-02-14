@@ -3,16 +3,16 @@
 module.exports = function (dialect) {
     var tokenToSQL = require('../sql92/token-to-sql.js')(dialect);
     return function (token) {
-        if (token.type === '$hexLiteral') {
+        if (token.type==='$hexLiteral') {
             return '0x'+token.value;
         }
-        else if (token.type === '$bitLiteral') {
+        else if (token.type==='$bitLiteral') {
             return '0b'+token.value;
         }
-        else if (token.type === '$commentCstyle') {
+        else if (token.type==='$commentCstyle') {
             return '/*'+token.value+'*/';
         }
-        else if (token.type === '$string') {
+        else if (token.type==='$string') {
             var value = "'" + token.value.replace("'","''") + "'";
             value = value.replace(/\\(?![^%_])/,'\\\\');
             value = value.replace(String.fromCharCode(0), '\\0');
@@ -21,13 +21,13 @@ module.exports = function (dialect) {
             value = value.replace(String.fromCharCode(13), '\\r');
             value = value.replace(String.fromCharCode(9), '\\t');
             value = value.replace(String.fromCharCode(26), '\\Z');
-            if (token.type == '$bstring') {
+            if (token.type==='$bstring') {
                 return 'B' + value;
             }
-            else if (token.type == '$xstring') {
+            else if (token.type==='$xstring') {
                 return 'X' + value;
             }
-            else if (token.type == '$nstring') {
+            else if (token.type==='$nstring') {
                 return 'N' + value;
             }
             else if (token.attr.charset) {
@@ -35,10 +35,10 @@ module.exports = function (dialect) {
             }
             return value;
         }
-        else if (token.type === '$setdelimiter') {
+        else if (token.type==='$setdelimiter') {
             return 'DELIMITER ' + token.value;
         }
-        else if (token.type == '$identifierQuoted') {
+        else if (token.type==='$identifierQuoted') {
             return '`' + token.value.replace('`','``') + '`';
         }
         else {

@@ -1,5 +1,5 @@
 'use strict';
-var SQL92 = module.exports = {}
+var SQL92 = module.exports = {};
 
 SQL92.TokenMatcherL0 = require('./sql92/token-matcher-L0.js')(SQL92);
 SQL92.TokenMatcherL1 = require('./sql92/token-matcher-L1.js')(SQL92);

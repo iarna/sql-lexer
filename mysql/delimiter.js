@@ -15,15 +15,15 @@ var Delimiter = function(options) {
 util.inherits(Delimiter,stream.Transform);
 
 Delimiter.prototype.isBufferDelimiter = function () {
-    if (this.buffer.length !== this.delimiter.length) return false;
+    if (this.buffer.length!==this.delimiter.length) return false;
     for (var ii=0; ii<this.delimiter.length-1; ++ii) {
-        if (this.delimiter[ii].type !== this.buffer[ii].type
-        ||  this.delimiter[ii].value !== this.buffer[ii].value) return false;
+        if (this.delimiter[ii].type!==this.buffer[ii].type
+        ||  this.delimiter[ii].value!==this.buffer[ii].value) return false;
     }
     var last = this.delimiter.length-1;
-    if (this.delimiter[last].type !== this.buffer[last].type) return false;
-    if (this.delimiter[last].value === this.buffer[last].value) return true;
-    if (this.delimiter[last].value !== this.buffer[last].value.substr(0,this.delimiter[last].value.length)) return false;
+    if (this.delimiter[last].type!==this.buffer[last].type) return false;
+    if (this.delimiter[last].value===this.buffer[last].value) return true;
+    if (this.delimiter[last].value!==this.buffer[last].value.substr(0,this.delimiter[last].value.length)) return false;
     // If the the first part of the last token matches we have to split it in two as the first portion is the delimiter
     // and the second portion is the start of the next command.
     this.nextBuffer.push({type: this.buffer[last].type, value: this.buffer[last].value.substr(this.delimiter[last].value.length)});
@@ -83,7 +83,7 @@ Delimiter.prototype._transform = function(token,encoding,done) {
     }
     if (this.setNewDelimiter) {
         // We don't report the spaces been the DELIMITER command and the new delimiter
-        if (this.buffer.length==0 && this.isWhitespace(token)) {
+        if (this.buffer.length===0 && this.isWhitespace(token)) {
             return done();
         }
         // Whitespace defines the end of a delimiter

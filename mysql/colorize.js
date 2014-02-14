@@ -11,22 +11,22 @@ module.exports = function (dialect) {
     util.inherits(ColorizeMySQL,ColorizeSQL92);
 
     ColorizeMySQL.prototype._transform = function (token,encoding,done) {
-        if (token.type === '$hexLiteral') {
+        if (token.type==='$hexLiteral') {
             this.push(this.colors.string(dialect.toSQL(token)));
         }
-        else if (token.type === '$bitLiteral') {
+        else if (token.type==='$bitLiteral') {
             this.push(this.colors.string(dialect.toSQL(token)));
         }
-        else if (token.type === '$null') {
+        else if (token.type==='$null') {
             this.push(this.colors.string(dialect.toSQL(token)));
         }
-        else if (token.type === '$commentCstyle') {
+        else if (token.type==='$commentCstyle') {
             this.push(this.colors.string(dialect.toSQL(token)));
         }
-        else if (token.type == '$delimiter') {
+        else if (token.type==='$delimiter') {
             this.push( this.colors.delimiter(dialect.toSQL(token)) );
         }
-        else if (token.type == '$setdelimiter') {
+        else if (token.type==='$setdelimiter') {
             this.push( this.colors.delimiter(dialect.toSQL(token)) );
         }
         else {

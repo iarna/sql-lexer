@@ -7,7 +7,7 @@ var Colorize = module.exports = function (options) {
     stream.Transform.call(this, options);
     this._writableState.objectMode = true;
     this._readableState.objectMode = false;
-    var nocolor = function (str) { return str };
+    var nocolor = function (str) { return str }
     this.colors = {
         space: nocolor,
         comment: clc.xterm(240),

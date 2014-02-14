@@ -1,3 +1,4 @@
+"use strict";
 var util = require('util');
 var stream = require('stream');
 
@@ -28,10 +29,10 @@ TokenMatcherL0.prototype._transform = function(data,encoding,done) {
 TokenMatcherL0.prototype.match = function (char) {
     this.hungry = true;
     while (this.hungry) {
-       this.active ? this.active(char) : this.detect(char);
+        this.active ? this.active(char) : this.detect(char);
     }
     ++ this.streamPos;
-    if (char === '\n') {
+    if (char==='\n') {
         ++ this.streamRow;
         this.streamCol = 0;
     }
@@ -46,7 +47,7 @@ TokenMatcherL0.prototype.detect = function (char) {
         this[this.type].call(this,char);
         if (! this.hungry) return;
     }
-    char === 'eof' ? this.consume() : this.consume(char).error();
+    char==='eof' ? this.consume() : this.consume(char).error();
 }
 
 TokenMatcherL0.prototype._flush = function(done) {
@@ -57,7 +58,7 @@ TokenMatcherL0.prototype._flush = function(done) {
 
 TokenMatcherL0.prototype.consume = function(char,active) {
     if (char==='eof') throw new Error('Error in parser: Unexpected EOF while in '+this.type);
-    if (char===null || typeof char == 'undefined') char = '';
+    if (char===null || typeof char==='undefined') char = '';
     if (! this.active) {
         this.active = active? active: this[this.type];
         this.pos = this.streamPos;

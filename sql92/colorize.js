@@ -9,26 +9,26 @@ module.exports = function (dialect) {
     util.inherits(ColorizeSQL92,Colorize);
 
     ColorizeSQL92.prototype._transform = function (token,encoding,done) {
-        if (token.type == '$space') {
+        if (token.type==='$space') {
             this.push(this.colors.space(dialect.toSQL(token)));
         }
-        else if (token.type == '$comment') {
+        else if (token.type==='$comment') {
             this.push(this.colors.comment(dialect.toSQL(token)));
         }
         else if (token.type.match(/^[$][bxn]?string$/)) {
             this.push(this.colors.string(dialect.toSQL(token)));
         }
-        else if (token.type == '$identifierQuoted') {
+        else if (token.type==='$identifierQuoted') {
             this.push(this.colors.identifier(dialect.toSQL(token)));
         }
-        else if (token.type == '$symbol') {
+        else if (token.type==='$symbol') {
             this.push( this.colors.symbol(dialect.toSQL(token)) );
         }
-        else if (token.type == '$approximateUnsignedNumber' || token.type == '$approximateSignedNumber' ||
-            token.type == '$exactUnsignedNumber' || token.type == '$exactSignedNumber') {
+        else if (token.type==='$approximateUnsignedNumber' || token.type==='$approximateSignedNumber' ||
+            token.type==='$exactUnsignedNumber' || token.type==='$exactSignedNumber') {
             this.push( this.colors.number(dialect.toSQL(token)) );
         }
-        else if (token.type == '$bareword') {
+        else if (token.type==='$bareword') {
             var kw = token.value.toUpperCase();
             if (dialect.keyword.isReserved(kw)) {
                 this.push( this.colors.keyword(dialect.toSQL(token)) );
@@ -37,7 +37,7 @@ module.exports = function (dialect) {
                 this.push( this.colors.identifier(dialect.toSQL(token)) );
             }
         }
-        else if (token.type == '$error') {
+        else if (token.type==='$error') {
             this.push( this.colors.error(dialect.toSQL(token)) );
         }
         else {

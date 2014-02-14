@@ -22,23 +22,23 @@ module.exports = function (dialect) {
     util.inherits(TokenMatcherL0,BaseTokenMatcherL0);
 
     TokenMatcherL0.prototype.$space = function (char) {
-        if (char === ' ' || char === '\t' || char === '\n' || char === '\r') return this.consume(char);
-        if (char === 'eof') return this.complete();
+        if (char===' ' || char==='\t' || char==='\n' || char==='\r') return this.consume(char);
+        if (char==='eof') return this.complete();
         this.reject();
     }
 
     TokenMatcherL0.prototype.$comment = function (char) {
-        if (char !== '-') return this.reject();
+        if (char!=='-') return this.reject();
         this.consume();
         this.active = function (char) {
-            if (char !== '-') {
+            if (char!=='-') {
                 return this.complete('$symbol','-');
             }
             this.consume();
             this.active = function (char) {
-                if (char === 'eof') return this.complete();
+                if (char==='eof') return this.complete();
                 this.consume(char);
-                if (char === '\n') {
+                if (char==='\n') {
                     this.complete();
                 }
             }
@@ -46,22 +46,22 @@ module.exports = function (dialect) {
     }
 
     TokenMatcherL0.prototype.$digits = function (char) {
-        if (char === 'eof') return this.complete();
+        if (char==='eof') return this.complete();
         if (char.match(/\d/)) return this.consume(char);
         this.reject();
     }
 
     TokenMatcherL0.prototype.$letters = function (char) {
-        if (char === 'eof') return this.complete();
+        if (char==='eof') return this.complete();
         if (char.match(unicode.L) || char==='_') return this.consume(char);
         this.reject();
     }
 
     var stringMatcher$ = TokenMatcherL0.stringMatcher$ = function (delim,what) {
         return function (char) {
-            if (char !== delim) return this.reject();
+            if (char!==delim) return this.reject();
             var quoteEscape = function (char) {
-                if (char !== delim) return this.complete();
+                if (char!==delim) return this.complete();
 
                 this.consume(char);
                 this.active = stringChar;
@@ -69,7 +69,7 @@ module.exports = function (dialect) {
             var stringChar = function (char) {
                 if (char==='eof') return this.error('unterminated '+what);
                 if (char!==delim) return this.consume(char);
-                if (char === delim) {
+                if (char===delim) {
                     this.consume();
                     this.active = quoteEscape;
                 }

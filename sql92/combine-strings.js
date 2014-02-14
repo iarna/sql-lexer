@@ -13,11 +13,11 @@ util.inherits(CombineStrings,stream.Transform);
 
 CombineStrings.prototype._transform = function(data,encoding,done) {
     if (this.string) {
-        if (data.type === '$string') {
+        if (data.type==='$string') {
             this.buffer = [];
             this.string.value += data.value;
         }
-        else if (data.type === '$space') {
+        else if (data.type==='$space') {
             this.buffer.push(data);
         }
         else {
@@ -30,7 +30,7 @@ CombineStrings.prototype._transform = function(data,encoding,done) {
         }
     }
     else {
-        if (data.type === '$string') {
+        if (data.type==='$string') {
             this.string = data;
         }
         else {

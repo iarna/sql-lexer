@@ -1,7 +1,6 @@
 'use strict';
 var sql = require('../index.js');
 var fs = require('fs');
-var StreamJSON = require('../util/stream-json.js');
 var byline = require('byline');
 var test = require('tape');
 
@@ -17,12 +16,12 @@ test('MySQL', function (t) {
             var ext = match[2];
             var tokens = [];
             var complete = function (test,index) {
-               if (!buf[test]) buf[test] = [];
-               buf[test][index] = tokens;
-               if (buf[test].length == 2) {
-                   t.deepEqual(buf[test][0],buf[test][1],test);
-                   delete buf[test];
-               }
+                if (!buf[test]) buf[test] = [];
+                buf[test][index] = tokens;
+                if (buf[test].length===2) {
+                    t.deepEqual(buf[test][0],buf[test][1],test);
+                    delete buf[test];
+                }
             }
             
             switch (ext) {

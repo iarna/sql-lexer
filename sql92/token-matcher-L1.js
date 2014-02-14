@@ -28,7 +28,7 @@ module.exports = function (dialect) {
     util.inherits(TokenMatcherL1,BaseTokenMatcherL1);
 
     var $passthrough = TokenMatcherL1.$passthrough = function () {
-        this.token.type === this.type ? this.consume().complete() : this.reject();
+        this.token.type===this.type ? this.consume().complete() : this.reject();
     }
 
     TokenMatcherL1.prototype.$error = $passthrough;
@@ -37,7 +37,7 @@ module.exports = function (dialect) {
     TokenMatcherL1.prototype.$string = $passthrough;
 
     TokenMatcherL1.prototype.$charsetstring = function () {
-        if (this.token.type !== '$letters' || this.token.value[0] !== '_') return this.reject();
+        if (this.token.type!=='$letters' || this.token.value[0]!=='_') return this.reject();
         this.consume();
         this.active = function () {
             if (this.token.type==='$digits') return this.consume();
@@ -56,15 +56,15 @@ module.exports = function (dialect) {
     }
 
     var typedStringMatcher$ = function (prefix) {
-       return function () {
-           if ( this.token.type !== '$letters' || this.token.value.toLowerCase() !== prefix ) return this.reject();
-           this.consume();
-           this.active = function () {
-               if (this.token.type !== '$string') return this.revert();
-               this.consume().complete();
-           };
-           this.active.value = function () { return this.buffer[1].value }
-       }
+        return function () {
+            if ( this.token.type!=='$letters' || this.token.value.toLowerCase()!==prefix ) return this.reject();
+            this.consume();
+            this.active = function () {
+                if (this.token.type!=='$string') return this.revert();
+                this.consume().complete();
+            };
+            this.active.value = function () { return this.buffer[1].value }
+        }
     }
 
     TokenMatcherL1.prototype.$bstring = typedStringMatcher$('b');
@@ -76,13 +76,13 @@ module.exports = function (dialect) {
     TokenMatcherL1.prototype.$eof = $passthrough;
 
     var unsignedInteger$ = function (next) {
-        return function () { this.token.type === '$digits' ? this.consume() : next ? next.call(this) : this.reject() };
+        return function () { this.token.type==='$digits' ? this.consume() : next ? next.call(this) : this.reject() };
     }
 
     var integerOnly$ = function (next) {
         var integer = unsignedInteger$(next);
         return function () {
-            if (this.token.type !== '$digits') { return this.revert() }
+            if (this.token.type!=='$digits') { return this.revert() }
             this.consume();
             this.active = integer;
         }
@@ -97,11 +97,11 @@ module.exports = function (dialect) {
             this.active = unsignedInteger;
         });
         return function () {
-            if (this.token.type === '$digits') {
+            if (this.token.type==='$digits') {
                 this.consume();
                 this.active = integerDotInteger;
             }
-            else if (this.token.type === '$symbol' && this.token.value==='.') {
+            else if (this.token.type==='$symbol' && this.token.value==='.') {
                 this.consume();
                 this.active = integerOnly;
             }
@@ -114,17 +114,17 @@ module.exports = function (dialect) {
     var approximateUnsignedNumericLiteral$ = function (next) {
         var integerOnly = integerOnly$(next);
         var exponent = function () {
-            if (this.token.type === '$symbol' && this.token.value.match(/^[-+]$/)) {
+            if (this.token.type==='$symbol' && this.token.value.match(/^[-+]$/)) {
                 this.consume();
                 this.active = integerOnly;
             }
             else {
-               this.active = integerOnly;
-               this.active();
+                this.active = integerOnly;
+                this.active();
             }
         }
         return exactUnsignedNumericLiteral$(function () {
-            if (this.token.type !== '$letters' || this.token.value.toLowerCase()!=='e') { return this.revert() }
+            if (this.token.type!=='$letters' || this.token.value.toLowerCase()!=='e') { return this.revert() }
             this.consume();
             this.active = exponent;
         })
@@ -132,14 +132,14 @@ module.exports = function (dialect) {
 
     TokenMatcherL1.prototype.$approximateUnsignedNumber = approximateUnsignedNumericLiteral$();
     TokenMatcherL1.prototype.$approximateSignedNumber = function () {
-        if (this.token.type!=='$symbol' || (this.token.value!=='-' && this.token.value!== '+')) { return this.revert() }
+        if (this.token.type!=='$symbol' || (this.token.value!=='-' && this.token.value!=='+')) { return this.revert() }
         this.consume();
         this.active = this.$approximateUnsignedNumber;
     }
 
     TokenMatcherL1.prototype.$exactUnsignedNumber = exactUnsignedNumericLiteral$();
     TokenMatcherL1.prototype.$exactSignedNumber = function () {
-        if (this.token.type!=='$symbol' || (this.token.value!=='-' && this.token.value!== '+')) { return this.revert() }
+        if (this.token.type!=='$symbol' || (this.token.value!=='-' && this.token.value!=='+')) { return this.revert() }
         this.consume();
         this.active = this.$exactUnsignedNumber;
     }
@@ -152,6 +152,7 @@ module.exports = function (dialect) {
             case '$letters':
             case '$digits':
                 this.consume();
+                break;
             default:
                 this.complete();
             }

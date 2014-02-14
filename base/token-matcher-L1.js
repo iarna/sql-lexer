@@ -1,3 +1,4 @@
+"use strict";
 var util = require('util');
 var stream = require('stream');
 
@@ -21,8 +22,8 @@ TokenMatcherL1.prototype._transform = function(data,encoding,done) {
 
 TokenMatcherL1.prototype.match = function (token) {
     this.matchBuffer = [token];
-    while (this.token = this.matchBuffer[0]) {
-       this.active ? this.active() : this.detect();
+    while ((this.token = this.matchBuffer[0])) {
+        this.active ? this.active() : this.detect();
     }
 }
 
@@ -60,11 +61,9 @@ TokenMatcherL1.prototype.reject = TokenMatcherL1.prototype.complete = function(t
             this.buffer.forEach(function (token) { value += token.value });
         }
     }
+    var attr = {};
     if (this.active && this.active.attr) {
         attr = this.active.attr.call(this);
-    }
-    else {
-        attr = {};
     }
     if (value.length) {
         var token = {};

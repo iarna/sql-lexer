@@ -38,7 +38,7 @@ module.exports = function (dialect) {
     TokenMatcherL1.prototype.$commentCstyle = SQL92TokenMatcherL1.$passthrough;
 
     TokenMatcherL1.prototype.$userDefined = function () {
-        if (this.token.type!=='$symbol' || this.token.value !=='@') return this.reject();
+        if (this.token.type!=='$symbol' || this.token.value!=='@') return this.reject();
         this.consume();
         this.active = this.$bareword;
     }

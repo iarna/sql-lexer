@@ -1,5 +1,5 @@
 'use strict';
-var MySQL = module.exports = {}
+var MySQL = module.exports = {};
 
 MySQL.TokenMatcherL0 = require('./mysql/token-matcher-L0.js')(MySQL);
 MySQL.TokenMatcherL1 = require('./mysql/token-matcher-L1.js')(MySQL);
