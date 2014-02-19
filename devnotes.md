@@ -6,11 +6,7 @@ SQL92 support is, AFAIK, complete. Anything missing is a bug.
 MySQL support should be complete except for those (and COLLATE <collation>
 suffixes).  This includes full support for alterable delimiters.  Also
 should document outside of code the one way it differs from MySQL in
-handling DELIMITER.  We may be able to through errors if people try to use
-it in unusual ways.
-
-MySQL EOL comments don't currently match MySQL semantics.  MySQL only
-matches them if the '--' is followed by whitespace.
+handling DELIMITER.
 
 MySQL is missing full tests as yet. Some need to be added to assert for the
 various MySQL specific features.
