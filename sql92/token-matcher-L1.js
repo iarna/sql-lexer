@@ -134,14 +134,30 @@ module.exports = function (dialect) {
     TokenMatcherL1.prototype.$approximateSignedNumber = function () {
         if (this.token.type!=='$symbol' || (this.token.value!=='-' && this.token.value!=='+')) { return this.revert() }
         this.consume();
-        this.active = this.$approximateUnsignedNumber;
+        this.active = function () {
+            if ((this.token.type==='$symbol' && this.token.value==='.') || this.token.type==='$digits') {
+                this.active = this.$approximateUnsignedNumber;
+                return this.active();
+            }
+            else {
+                this.revert();
+            }
+        }
     }
 
     TokenMatcherL1.prototype.$exactUnsignedNumber = exactUnsignedNumericLiteral$();
     TokenMatcherL1.prototype.$exactSignedNumber = function () {
         if (this.token.type!=='$symbol' || (this.token.value!=='-' && this.token.value!=='+')) { return this.revert() }
         this.consume();
-        this.active = this.$exactUnsignedNumber;
+        this.active = function () {
+            if ((this.token.type==='$symbol' && this.token.value==='.') || this.token.type==='$digits') {
+                this.active = this.$exactUnsignedNumber;
+                return this.active();
+            }
+            else {
+                this.revert();
+            }
+        }
     }
 
     TokenMatcherL1.prototype.$bareword = function () {

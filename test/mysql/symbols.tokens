@@ -1,16 +1,51 @@
-{"type":"$symbol","value":"(","pos":0,"row":0,"col":0,"attr":{}}
-{"type":"$symbol","value":")","pos":1,"row":0,"col":1,"attr":{}}
-{"type":"$symbol","value":"*","pos":2,"row":0,"col":2,"attr":{}}
-{"type":"$approximateSignedNumber","value":"+","pos":3,"row":0,"col":3,"attr":{}}
-{"type":"$symbol","value":",","pos":4,"row":0,"col":4,"attr":{}}
-{"type":"$approximateSignedNumber","value":"-","pos":5,"row":0,"col":5,"attr":{}}
-{"type":"$delimiter","value":";","pos":7,"row":0,"col":7}
-{"type":"$symbol","value":"=","pos":8,"row":0,"col":8,"attr":{}}
-{"type":"$symbol","value":".","pos":9,"row":0,"col":9,"attr":{}}
-{"type":"$symbol","value":"<","pos":10,"row":0,"col":10,"attr":{}}
-{"type":"$symbol","value":"|","pos":11,"row":0,"col":11,"attr":{}}
-{"type":"$symbol","value":"<=","pos":12,"row":0,"col":12,"attr":{}}
-{"type":"$symbol","value":"<>","pos":14,"row":0,"col":14,"attr":{}}
-{"type":"$symbol","value":">","pos":16,"row":0,"col":16,"attr":{}}
-{"type":"$symbol","value":"||","pos":17,"row":0,"col":17,"attr":{}}
-{"type":"$symbol","value":">=","pos":19,"row":0,"col":19,"attr":{}}
+{"type":"$symbol","value":"@","pos":0,"row":0,"col":0,"attr":{}}
+{"type":"$space","value":" ","pos":1,"row":0,"col":1,"attr":{}}
+{"type":"$symbol","value":"%","pos":2,"row":0,"col":2,"attr":{}}
+{"type":"$space","value":" ","pos":3,"row":0,"col":3,"attr":{}}
+{"type":"$symbol","value":"^","pos":4,"row":0,"col":4,"attr":{}}
+{"type":"$space","value":" ","pos":5,"row":0,"col":5,"attr":{}}
+{"type":"$symbol","value":"&","pos":6,"row":0,"col":6,"attr":{}}
+{"type":"$space","value":" ","pos":7,"row":0,"col":7,"attr":{}}
+{"type":"$symbol","value":"!","pos":8,"row":0,"col":8,"attr":{}}
+{"type":"$space","value":" ","pos":9,"row":0,"col":9,"attr":{}}
+{"type":"$symbol","value":"&&","pos":10,"row":0,"col":10,"attr":{}}
+{"type":"$space","value":" ","pos":12,"row":0,"col":12,"attr":{}}
+{"type":"$symbol","value":"!=","pos":13,"row":0,"col":13,"attr":{}}
+{"type":"$space","value":" ","pos":15,"row":0,"col":15,"attr":{}}
+{"type":"$symbol","value":"<","pos":16,"row":0,"col":16,"attr":{}}
+{"type":"$space","value":" ","pos":17,"row":0,"col":17,"attr":{}}
+{"type":"$symbol","value":"<<","pos":18,"row":0,"col":18,"attr":{}}
+{"type":"$space","value":" ","pos":20,"row":0,"col":20,"attr":{}}
+{"type":"$symbol","value":"<>","pos":21,"row":0,"col":21,"attr":{}}
+{"type":"$space","value":" ","pos":23,"row":0,"col":23,"attr":{}}
+{"type":"$symbol","value":"<=","pos":24,"row":0,"col":24,"attr":{}}
+{"type":"$space","value":" ","pos":26,"row":0,"col":26,"attr":{}}
+{"type":"$symbol","value":"<=>","pos":27,"row":0,"col":27,"attr":{}}
+{"type":"$space","value":" ","pos":30,"row":0,"col":30,"attr":{}}
+{"type":"$symbol","value":">","pos":31,"row":0,"col":31,"attr":{}}
+{"type":"$space","value":" ","pos":32,"row":0,"col":32,"attr":{}}
+{"type":"$symbol","value":">=","pos":33,"row":0,"col":33,"attr":{}}
+{"type":"$space","value":" ","pos":35,"row":0,"col":35,"attr":{}}
+{"type":"$symbol","value":">>","pos":36,"row":0,"col":36,"attr":{}}
+{"type":"$space","value":" ","pos":38,"row":0,"col":38,"attr":{}}
+{"type":"$symbol","value":"(","pos":39,"row":0,"col":39,"attr":{}}
+{"type":"$space","value":" ","pos":40,"row":0,"col":40,"attr":{}}
+{"type":"$symbol","value":")","pos":41,"row":0,"col":41,"attr":{}}
+{"type":"$space","value":" ","pos":42,"row":0,"col":42,"attr":{}}
+{"type":"$symbol","value":"*","pos":43,"row":0,"col":43,"attr":{}}
+{"type":"$space","value":" ","pos":44,"row":0,"col":44,"attr":{}}
+{"type":"$symbol","value":"+","pos":45,"row":0,"col":45,"attr":{}}
+{"type":"$space","value":" ","pos":46,"row":0,"col":46,"attr":{}}
+{"type":"$symbol","value":",","pos":47,"row":0,"col":47,"attr":{}}
+{"type":"$space","value":" ","pos":48,"row":0,"col":48,"attr":{}}
+{"type":"$symbol","value":"-","pos":49,"row":0,"col":49,"attr":{}}
+{"type":"$space","value":" ","pos":50,"row":0,"col":50,"attr":{}}
+{"type":"$symbol","value":"/","pos":51,"row":0,"col":51,"attr":{}}
+{"type":"$space","value":" ","pos":52,"row":0,"col":52,"attr":{}}
+{"type":"$symbol","value":"=","pos":54,"row":0,"col":54,"attr":{}}
+{"type":"$space","value":" ","pos":55,"row":0,"col":55,"attr":{}}
+{"type":"$symbol","value":".","pos":56,"row":0,"col":56,"attr":{}}
+{"type":"$space","value":" ","pos":57,"row":0,"col":57,"attr":{}}
+{"type":"$symbol","value":"|","pos":58,"row":0,"col":58,"attr":{}}
+{"type":"$space","value":" ","pos":59,"row":0,"col":59,"attr":{}}
+{"type":"$symbol","value":"||","pos":60,"row":0,"col":60,"attr":{}}

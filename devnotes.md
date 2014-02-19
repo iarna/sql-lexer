@@ -8,9 +8,6 @@ suffixes).  This includes full support for alterable delimiters.  Also
 should document outside of code the one way it differs from MySQL in
 handling DELIMITER.
 
-MySQL is missing full tests as yet. Some need to be added to assert for the
-various MySQL specific features.
-
 Next up
 -------
 

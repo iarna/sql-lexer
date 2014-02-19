@@ -98,8 +98,6 @@ module.exports = function (dialect) {
         case ';':
         case '=':
         case '.':
-        case '(':
-        case ')':
             this.consume(char).complete();
             break;
         case '<':

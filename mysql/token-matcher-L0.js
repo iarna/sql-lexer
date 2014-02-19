@@ -138,9 +138,13 @@ module.exports = function (dialect) {
 
     TokenMatcherL0.prototype.$commentCstyle = function (char) {
         if (char!=='/') return this.reject();
-        this.consume();
+        this.consume(char);
         this.active = function (char) {
-            if (char!=='*') return this.reject();
+            if (char!=='*') {
+                this.complete('$symbol');
+                return this.match(char);
+            }
+            this.buffer = '';
             this.consume();
             var maybeSlash = function (char) {
                 if (char==='eof') return this.error('unterminated c-style comment','/*'+this.buffer+'*');

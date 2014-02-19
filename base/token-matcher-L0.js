@@ -47,7 +47,7 @@ TokenMatcherL0.prototype.detect = function (char) {
         this[this.type].call(this,char);
         if (! this.hungry) return;
     }
-    char==='eof' ? this.consume() : this.consume(char).error();
+    char==='eof' ? this.consume() : this.consume(char).error('unexpected character');
 }
 
 TokenMatcherL0.prototype._flush = function(done) {
@@ -73,7 +73,7 @@ TokenMatcherL0.prototype.consume = function(char,active) {
 
 TokenMatcherL0.prototype.reject = TokenMatcherL0.prototype.complete = function(type,attr,value) {
     if (!this.active) return this;
-    if (this.buffer.length || (typeof value !== 'undefined' && value!==null && value.length)) {
+    if (this.buffer.length || (value && value.length)) {
         this.push({
             type: type ? type : this.type,
             value: value ? value : this.buffer,

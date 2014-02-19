@@ -13,7 +13,7 @@ module.exports = function (dialect) {
             var testCount = 0;
             files.forEach(function(file){
                 var match;
-                if (! (match = file.match(/(.*)[.]sql/))) { return }
+                if (! (match = file.match(/(.*)[.]sql$/))) { return }
                 ++ testCount;
                 var base = match[1];
                 var parsed = [];

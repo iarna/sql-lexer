@@ -1,0 +1,1 @@
+{"type":"$error","value":"--this is an error","pos":0,"row":0,"col":0,"attr":{"message":"End of line comments in MySQL MUST start with a whitespace character, not \"t\""}}

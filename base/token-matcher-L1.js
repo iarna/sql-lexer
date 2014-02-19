@@ -71,12 +71,12 @@ module.exports = function (dialect) {
                 token[key] = this.buffer[0][key];
             }
             token.type = type;
+            for (var k in attr) { token.attr[k] = attr[k] }
             // We get an unmutated value for error tokens, as they don't
             // have any type-specific semantics
             token.value = (type==='$error')
-                        ? dialect.toSQL({type: this.type, value: value, attr: attr})
+                        ? dialect.toSQL({type: this.type, value: value, attr: token.attr})
                         : value;
-            token.attr = attr;
             this.push(token);
             this.skip = {};
         }

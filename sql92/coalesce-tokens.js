@@ -10,7 +10,7 @@ var CoalesceTokens = function(options) {
 util.inherits(CoalesceTokens,stream.Transform);
 
 CoalesceTokens.prototype.canCoalesce = function(type) {
-    return type==='$error' || type==='$space';
+    return type==='$error' || type==='$space' || type==='$digits' || type==='$letters';
 }
 
 CoalesceTokens.prototype._transform = function(data,encoding,done) {
