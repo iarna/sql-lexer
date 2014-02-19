@@ -15,3 +15,4 @@ MySQL.BufferTokensByCommand = require('./mysql/buffer-tokens-by-command.js')(MyS
 MySQL.StringifyTokenBuffers = require('./mysql/stringify-token-buffers.js')(MySQL);
 MySQL.StripExtraWhitespace = require('./mysql/strip-extra-whitespace.js')(MySQL);
 MySQL.CompressWhitespace = require('./mysql/compress-whitespace.js')(MySQL);
+MySQL.FilterEmptyBuffers = require('./mysql/filter-empty-buffers.js')(MySQL);
