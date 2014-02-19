@@ -71,15 +71,16 @@ TokenMatcherL0.prototype.consume = function(char,active) {
     return this;
 }
 
-TokenMatcherL0.prototype.reject = TokenMatcherL0.prototype.complete = function(type,value) {
+TokenMatcherL0.prototype.reject = TokenMatcherL0.prototype.complete = function(type,attr,value) {
     if (!this.active) return this;
-    if (this.buffer.length || (value && value.length)) {
+    if (this.buffer.length || (typeof value !== 'undefined' && value!==null && value.length)) {
         this.push({
             type: type ? type : this.type,
             value: value ? value : this.buffer,
             pos: this.pos,
             row: this.row,
-            col: this.col
+            col: this.col,
+            attr: attr ? attr : {}
         });
     }
     this.active = null;
@@ -88,9 +89,9 @@ TokenMatcherL0.prototype.reject = TokenMatcherL0.prototype.complete = function(t
     return this;
 }
 
-TokenMatcherL0.prototype.error = function(value) {
+TokenMatcherL0.prototype.error = function(msg,value) {
     this.hungry = false;
-    return this.complete('$error',value);
+    return this.complete('$error',{message: msg},value);
 }
 
 module.exports = function (dialect) {

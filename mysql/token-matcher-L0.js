@@ -96,12 +96,12 @@ module.exports = function (dialect) {
                 '_': '\\_'
             }
             var slashEscape = function (char) {
-                if (char==='eof') return this.error('unterminated '+what);
+                if (char==='eof') return this.error('unterminated '+what,delim+this.buffer);
                 this.consume( char in escapedChars ? escapedChars[char] : char );
                 this.active = stringChar;
             }
             var stringChar = function (char) {
-                if (char==='eof') return this.error('unterminated '+what);
+                if (char==='eof') return this.error('unterminated '+what,delim+this.buffer);
                 if (char===delim) {
                     this.consume();
                     this.active = quoteEscape;
@@ -143,13 +143,13 @@ module.exports = function (dialect) {
             if (char!=='*') return this.reject();
             this.consume();
             var maybeSlash = function (char) {
-                if (char==='eof') return this.error('unterminated c-style comment');
+                if (char==='eof') return this.error('unterminated c-style comment','/*'+this.buffer+'*');
                 if (char==='/') return this.consume().complete();
                 this.consume('*'+char);
                 this.active = inComment;
             }
             var inComment = function (char) {
-                if (char==='eof') return this.error('unterminated c-style comment');
+                if (char==='eof') return this.error('unterminated c-style comment','/*'+this.buffer);
                 if (char!=='*') return this.consume(char);
                 this.consume();
                 this.active = maybeSlash;
@@ -163,7 +163,7 @@ module.exports = function (dialect) {
         this.consume(char);
         this.active = function (char) {
             if (char==='N') return this.consume(char).complete();
-            this.error();
+            this.error('unexpected backslash');
             this.match(char);
         }
     }
@@ -183,8 +183,8 @@ module.exports = function (dialect) {
                         }
                         return;
                     }
-                    this.complete('$digits','0');
-                    this.complete('$letters','x');
+                    this.complete('$digits',{},'0');
+                    this.complete('$letters',{},'x');
                     this.reject();
                 }
             }
@@ -199,13 +199,13 @@ module.exports = function (dialect) {
                         }
                         return;
                     }
-                    this.complete('$digits','0');
-                    this.complete('$letters','b');
+                    this.complete('$digits',{},'0');
+                    this.complete('$letters',{},'b');
                     this.reject();
                 }
             }
             else {
-                this.complete('$digits','0');
+                this.complete('$digits',{},'0');
                 this.reject();
                 return;
             }

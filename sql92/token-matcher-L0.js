@@ -32,7 +32,7 @@ module.exports = function (dialect) {
         this.consume();
         this.active = function (char) {
             if (char!=='-') {
-                return this.complete('$symbol','-');
+                return this.complete('$symbol',{},'-');
             }
             this.consume();
             this.active = function (char) {
@@ -67,7 +67,7 @@ module.exports = function (dialect) {
                 this.active = stringChar;
             }
             var stringChar = function (char) {
-                if (char==='eof') return this.error('unterminated '+what);
+                if (char==='eof') return this.error('unterminated '+what, delim + this.buffer);
                 if (char!==delim) return this.consume(char);
                 if (char===delim) {
                     this.consume();
