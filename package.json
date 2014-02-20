@@ -18,7 +18,7 @@
   "devDependencies": {
     "tape": "~1.0.4",
     "byline": "~4.1.1",
-    "collect-events": "~1.0.0"
+    "collect-callbacks": "~1.2.1"
   },
   "directories": {
     "test": "test"

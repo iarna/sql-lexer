@@ -3,7 +3,7 @@ var sql = require('../index.js');
 var fs = require('fs');
 var byline = require('byline');
 var test = require('tape');
-var collect = require('collect-events');
+var collect = require('collect-callbacks');
 
 module.exports = function (dialect) {
     test(dialect, function (t) {
