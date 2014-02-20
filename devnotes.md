@@ -8,6 +8,10 @@ suffixes).  This includes full support for alterable delimiters.  Also
 should document outside of code the one way it differs from MySQL in
 handling DELIMITER.
 
+SQLite support is new, but appears to be complete.  Their documentation is
+not easy to translate into a lexer without going through it methodically so
+I won't feel that SQLite support is solid until I write a parser for it.
+
 Next up
 -------
 

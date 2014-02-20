@@ -1,0 +1,1 @@
+_utf8'some text'
