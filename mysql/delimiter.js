@@ -38,7 +38,8 @@ Delimiter.prototype.flushBuffer = function () {
             value: this.delimiterValue,
             pos: this.buffer[0].pos,
             row: this.buffer[0].row,
-            col: this.buffer[0].col
+            col: this.buffer[0].col,
+            attr: {}
         };
         this.push(delim);
     }
@@ -57,7 +58,7 @@ Delimiter.prototype.setDelimiterFromBuffer = function() {
     this.delimiter = this.buffer;
     this.delimiterValue = '';
     for (var ii in this.delimiter) this.delimiterValue += this.delimiter[ii].value;
-    this.push({type:'$setdelimiter',value:this.delimiterValue, pos:this.setNewDelimiter.pos, row:this.setNewDelimiter.row, col:this.setNewDelimiter.col});
+    this.push({type:'$setdelimiter',value:this.delimiterValue, pos:this.setNewDelimiter.pos, row:this.setNewDelimiter.row, col:this.setNewDelimiter.col, attr:{}});
     this.setNewDelimiter = false;
 }
 
