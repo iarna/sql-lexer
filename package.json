@@ -1,7 +1,6 @@
 {
   "name": "sql-lexer",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
   "dependencies": {
     "unicode-6.3.0": "~0.1.2",
     "cli-color": "0.2.3"
@@ -18,7 +17,7 @@
   "devDependencies": {
     "tape": "~1.0.4",
     "byline": "~4.1.1",
-    "collect-callbacks": "~1.2.1"
+    "collect-callbacks": "~1.2.2"
   },
   "directories": {
     "test": "test"
