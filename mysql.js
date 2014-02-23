@@ -11,3 +11,4 @@ MySQL.Colorize       = require('./mysql/colorize.js')(MySQL);
 MySQL.CoalesceTokens = require('./sql92/coalesce-tokens.js')(MySQL);
 MySQL.CombineStrings = require('./sql92/combine-strings.js')(MySQL);
 MySQL.Delimiter      = require('./mysql/delimiter.js')(MySQL);
+MySQL.BufferTokensByCommand = require('./mysql/buffer-tokens-by-command.js')(MySQL);

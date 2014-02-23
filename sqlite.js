@@ -10,3 +10,4 @@ SQLite.Colorize       = require('./sqlite/colorize.js')(SQLite);
 SQLite.CoalesceTokens = require('./sql92/coalesce-tokens.js')(SQLite);
 SQLite.CombineStrings = require('./sql92/combine-strings.js')(SQLite);
 SQLite.TraceLex       = require('./sql92/trace-lexer.js')(SQLite);
+SQLite.BufferTokensByCommand = require('./sqlite/buffer-tokens-by-command.js')(SQLite);
