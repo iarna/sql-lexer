@@ -14,6 +14,9 @@ module.exports = function (dialect) {
         if (token.type==='$delimiter') {
             this.push( this.colors.delimiter(dialect.toSQL(token)) );
         }
+        else if (token.type==='$identifierQuotedMySQL' || token.type==='$identifierQuotedMSSQL') {
+            this.push(this.colors.identifier(dialect.toSQL(token)));
+        }
         else {
             return ColorizeSQL92.prototype._transform.call(this,token,encoding,done);
         }
