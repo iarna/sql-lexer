@@ -6,7 +6,6 @@ module.exports = function (dialect) {
     var ColorizeSQL92 = require('../sql92/colorize.js')(dialect);
     var ColorizeMySQL = module.exports = function (options) {
         ColorizeSQL92.call(this, options);
-        this.colors.delimiter = clc.xterm(253);
     }
     util.inherits(ColorizeMySQL,ColorizeSQL92);
 

@@ -16,7 +16,8 @@ var Colorize = module.exports = function (options) {
         symbol: clc.xterm(24),
         number: clc.xterm(37),
         keyword: clc.xterm(61),
-        error: clc.white.bold.bgRed
+        error: clc.white.bold.bgRed,
+        delimiter: clc.xterm(215)
     };
 }
 util.inherits(Colorize,stream.Transform);
