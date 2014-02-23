@@ -13,7 +13,7 @@ var Colorize = module.exports = function (options) {
         comment: clc.xterm(240),
         string: clc.xterm(37),
         identifier: clc.xterm(132),
-        symbol: clc.xterm(241),
+        symbol: clc.xterm(24),
         number: clc.xterm(37),
         keyword: clc.xterm(61),
         error: clc.white.bold.bgRed
