@@ -1,5 +1,6 @@
 An SQL Lexer for JavaScript
 ---------------------------
+[![Build Status](https://travis-ci.org/iarna/sql-lexer.svg?branch=master)](https://travis-ci.org/iarna/sql-lexer)
 
 This is the start of an SQL lexer for JavaScript.  When complete, it should
 be able to produce tokens suitable for parsing standard SQL92 and SQL2011. 
