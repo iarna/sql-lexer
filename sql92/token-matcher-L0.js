@@ -1,7 +1,7 @@
 'use strict';
 var util = require('util');
 var unicode = {
-    L: require('unicode-6.3.0/categories/L/regex.js')
+    L: require('unicode-6.3.0-categories-L-regex')
 };
 
 module.exports = function (dialect) {
